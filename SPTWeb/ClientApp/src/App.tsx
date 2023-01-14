@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import AppRoutes from './AppRoutes';
-import './custom.css';
+import React from "react";
+import { createBrowserRouter, RouterProvider, Routes } from "react-router-dom";
+import "./custom.css";
 
-export default class App extends Component {
-  static displayName = App.name;
+import HomePage from "./Pages/HomePage";
+import LoginPage from "./Pages/LoginPage";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomePage></HomePage>,
+  },
+  {
+    path: "login",
+    element: <LoginPage></LoginPage>,
+  },
+]);
 
-  render() {
-    return (
-        <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
-        </Routes>
-    );
-  }
+export default function App() {
+  return <RouterProvider router={router}></RouterProvider>;
 }
