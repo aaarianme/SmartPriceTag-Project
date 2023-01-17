@@ -26,7 +26,7 @@ export default function App() {
           <Route path="master" element={<ClientLoginPage />} />
           <Route path="store" element={<StoreLoginPage />} />
         </Route>
-        <Route path="/u" element={<DashboardPage />} />
+        <Route path="u" element={<DashboardPage />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
