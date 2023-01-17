@@ -10,6 +10,7 @@ export default function HomePage() {
       <input id="myinput" onChange={(e) => console.log(e)}></input>
       <button onClick={() => setData([...mydata, name])}>add name</button>
       <div>
+        <div></div>
         {mydata.map((s, i) => (
           <label>{s}</label>
         ))}
