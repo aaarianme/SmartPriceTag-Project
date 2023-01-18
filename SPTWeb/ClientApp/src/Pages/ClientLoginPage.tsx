@@ -1,6 +1,8 @@
 import React from "react";
+import { useGetRequest } from "../Hooks/HttpsRequest";
 
 export default function ClientLoginPage() {
+  //const [loaded, result, makeGetRequest] = useGetRequest();
   return (
     <div className="mx-60 mt-20">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">

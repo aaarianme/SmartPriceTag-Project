@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SPTWeb.Interfaces;
@@ -20,8 +21,6 @@ namespace SPTWeb.Controllers
 
 
         [HttpGet, Route("client")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> LoginClientRequest(string username, string password)
         {
             var authRes = await authServices.HandleClientLogin(username, password);
@@ -35,26 +34,38 @@ namespace SPTWeb.Controllers
             };
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, "Client"),
+                new Claim(ClaimTypes.Role, "client"),
             };
 
             var claimsIdentity = new ClaimsIdentity(
                 claims, CookieAuthenticationDefaults.AuthenticationScheme);
             
             await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(claimsIdentity),
-            authProperties);
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
             return authRes;
         }
 
         [HttpGet, Route("test")]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(policy: "client")]
         public async Task<IActionResult> test(string username)
         {
-            var res = authServices.HashPassword("a", out var salt);
-            return new OkObjectResult(new { res= HttpContext.User.Identity , pass= res,salt=Convert.ToHexString(salt)});
+            return new OkObjectResult(new { res= HttpContext.User.Identity });
         }
+
+        [HttpGet, Route("store")]
+        public async Task<IActionResult> LoginStoreRequest(string username, string password)
+        {
+            return Ok();
+        }
+
+        [HttpPost, Route("signout")]
+        public async Task<IActionResult> SignOutUser()
+        {
+            await HttpContext.SignOutAsync();
+            return Ok();
+        }
+
     }
 }

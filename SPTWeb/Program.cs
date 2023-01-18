@@ -17,12 +17,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
-        
+
     });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("client", policy => policy.RequireAuthenticatedUser().RequireRole("client"));
+    options.AddPolicy("authenticated", policy => policy.RequireAuthenticatedUser());
+});
+
 
 #region Dependency Injection AddScoped
 builder.Services.AddScoped<IAuthServices, AuthServices>();
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 #endregion
 
@@ -39,6 +45,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");

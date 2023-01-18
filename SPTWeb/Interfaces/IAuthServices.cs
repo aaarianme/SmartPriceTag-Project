@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SPTWeb.DTOs;
 
 namespace SPTWeb.Interfaces
 {
@@ -19,8 +20,16 @@ namespace SPTWeb.Interfaces
         /// <param name="salt">The salt used to hash hashedPassword</param>
         /// <returns>True if verified. False if verification fails</returns>
         public bool VerifyPassword(string hashedPassword, string password, string salt);
-
+        /// <summary>
+        /// Checks user creds against the database
+        /// </summary>
+        /// <param name="clientUsername">Username</param>
+        /// <param name="clientPassword">pPassword</param>
+        /// <returns>OK 200 If verified. 401 UnAuthorized If invalid.</returns>
         public Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword);
+
         
+
+
     }
 }

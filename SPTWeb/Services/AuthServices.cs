@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using SPTWeb.DTOs;
 using SPTWeb.Interfaces;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -10,14 +11,14 @@ namespace SPTWeb.Services
 {
     public class AuthServices : IAuthServices
     {
-        #region password hashing setup
+        #region Password hashing setup
         const int _keySize = 16;
         const int _iterations = 350000;
         HashAlgorithmName _hashAlgorithm = HashAlgorithmName.SHA512;
         #endregion
-        IAuthRepository authRepository;
+        IClientRepository authRepository;
         #region Depencency Injection
-        public AuthServices(IAuthRepository authRepository)
+        public AuthServices(IClientRepository authRepository)
         {
             this.authRepository = authRepository;
         }
@@ -46,11 +47,16 @@ namespace SPTWeb.Services
 
         public async Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword)
         {
-            var client = await authRepository.GetClient(clientUsername);
+            var client = await authRepository.Get(clientUsername);
             if (client == null) return new UnauthorizedResult();
             var isVerified = VerifyPassword(client.Pass, clientPassword, client.Salt);
             if (!isVerified) return new UnauthorizedResult();
             return new OkResult();
+        }
+
+        public Task<IActionResult> AddNewClient(ClientDTO clientInfo)
+        {
+            throw new NotImplementedException();
         }
     }
 }
