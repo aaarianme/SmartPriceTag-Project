@@ -25,7 +25,7 @@ namespace SPTWeb.Repository
         public async Task<Client> GetClient(string username)
         {
             object parameters = new { username = username};
-            return await dbConn.QueryFirstAsync<Client>("select * from clients where Username=@username",parameters);
+            return await dbConn.QuerySingleAsync<Client>("select * from clients where Username=@username",parameters);
         }
 
         public async Task<Client> GetClient(int clientId)

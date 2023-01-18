@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using SPTWeb.Interfaces;
-using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SPTWeb.Services
 {
@@ -33,7 +34,7 @@ namespace SPTWeb.Services
                 _keySize);
             return Convert.ToHexString(hash);
         }
-        
+
         public bool VerifyPassword(string hashedPassword, string password, string salt)
         {
             byte[] passByte = Encoding.UTF8.GetBytes(password);
@@ -45,7 +46,11 @@ namespace SPTWeb.Services
 
         public async Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword)
         {
-            return new OkObjectResult(new {res = await authRepository.GetClient(clientUsername) });
+            var client = await authRepository.GetClient(clientUsername);
+            if (client == null) return new UnauthorizedResult();
+            var isVerified = VerifyPassword(client.Pass, clientPassword, client.Salt);
+            if (!isVerified) return new UnauthorizedResult();
+            return new OkResult();
         }
     }
 }
