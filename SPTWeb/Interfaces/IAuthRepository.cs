@@ -1,7 +1,14 @@
-﻿namespace SPTWeb.Interfaces
+﻿
+
+using SPTWeb.Entity;
+
+namespace SPTWeb.Interfaces
 {
     
-    interface IAuthRepository
+    public interface IAuthRepository
     {
+        public Task<Client> GetClient(string username);
+        public Task<Client> GetClient(int clientId);
+
     }
 }

@@ -1,9 +1,20 @@
 
+using Microsoft.AspNetCore.Authentication;
+using SPTWeb.Interfaces;
+using SPTWeb.Repository;
+using SPTWeb.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+
+#region Dependency Injection AddScoped
+builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+
+#endregion
 
 var app = builder.Build();
 

@@ -1,17 +1,27 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SPTWeb.Interfaces;
 
 namespace SPTWeb.Controllers
 {
-    [Route("api/auth/")]
-    [ApiController]
+    [ApiController , Route("api/auth/")]
     public class AuthController : ControllerBase
     {
-        [HttpGet , Route("store")]
-        public async Task<IActionResult> Get(int id)
+        IAuthServices authServices;
+        #region Dependecy Injection 
+        public AuthController(IAuthServices authServices)
         {
-            return new OkObjectResult(new { listings = id });
+            this.authServices = authServices;
+        }
+        #endregion
 
+
+        [HttpGet , Route("client")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> LoginClientRequest(string username,string password)
+        {
+            return await authServices.HandleClientLogin(username, password);
         }
     }
 }
