@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using SPTWeb.DTOs;
 using SPTWeb.Interfaces;
 using System.Security.Claims;
@@ -54,9 +55,30 @@ namespace SPTWeb.Services
             return new OkResult();
         }
 
-        public Task<IActionResult> AddNewClient(ClientDTO clientInfo)
+        public async Task<IActionResult> AddNewClient(ClientDTO clientInfo)
         {
             throw new NotImplementedException();
+
+            //Checking if username already exists. Maybe not necessary?
+            var clientExists = await authRepository.Get(clientInfo.Username);
+
+            //Not sure if this is the right thing to return here.
+            if (clientExists != null) return new UnauthorizedResult();
+
+            //Attempt adding client
+            var success = authRepository.AddNewClient(clientInfo);
+
+            //Not sure what the above will actually return on an insert query?
+            if ()
+            {
+                return new OkResult();
+            }
+
+            return new UnauthorizedResult();
         }
+ 
+        
+
+
     }
 }
