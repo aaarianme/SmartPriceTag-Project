@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using MySql.Data.MySqlClient;
+using SPTWeb.DTOs;
 using SPTWeb.Entity;
 using SPTWeb.Interfaces;
 
@@ -8,8 +9,6 @@ namespace SPTWeb.Repository
     public class ClientRepository : RepositoryDataAccessObject, IClientRepository
     {
         
-        
-
         public async Task<Client> Get(string username)
         {
             object parameters = new { username = username};
@@ -19,7 +18,15 @@ namespace SPTWeb.Repository
 
         public async Task<Client> Get(int clientId)
         {
-            throw new NotImplementedException();
+            object parameters = new { clientId = clientId };
+            return await dbConn.QuerySingleAsync<Client>("select * from clients where clientId=@clientId", parameters);
+        }
+
+        public async Task Add(Client clientInfo)
+        {
+            object parameters = new { username = clientInfo.Username, password = clientInfo.Pass, name = clientInfo.Name ,salt=clientInfo.Salt };
+
+            await dbConn.QueryAsync("INSERT INTO clients (Username, Pass, Salt, Name) VALUES (@username, @password, @salt, @name)", parameters);
         }
     }
 }

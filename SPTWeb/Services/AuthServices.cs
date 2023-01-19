@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using SPTWeb.DTOs;
+using SPTWeb.Entity;
 using SPTWeb.Interfaces;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -17,11 +18,11 @@ namespace SPTWeb.Services
         const int _iterations = 350000;
         HashAlgorithmName _hashAlgorithm = HashAlgorithmName.SHA512;
         #endregion
-        IClientRepository authRepository;
+        IClientServices clientServices;
         #region Depencency Injection
-        public AuthServices(IClientRepository authRepository)
+        public AuthServices(IClientServices clientServices)
         {
-            this.authRepository = authRepository;
+            this.clientServices = clientServices;
         }
         #endregion
 
@@ -48,37 +49,11 @@ namespace SPTWeb.Services
 
         public async Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword)
         {
-            var client = await authRepository.Get(clientUsername);
+            var client = await clientServices.GetClient(clientUsername);
             if (client == null) return new UnauthorizedResult();
             var isVerified = VerifyPassword(client.Pass, clientPassword, client.Salt);
             if (!isVerified) return new UnauthorizedResult();
             return new OkResult();
         }
-
-        public async Task<IActionResult> AddNewClient(ClientDTO clientInfo)
-        {
-            throw new NotImplementedException();
-
-            //Checking if username already exists. Maybe not necessary?
-            var clientExists = await authRepository.Get(clientInfo.Username);
-
-            //Not sure if this is the right thing to return here.
-            if (clientExists != null) return new UnauthorizedResult();
-
-            //Attempt adding client
-            var success = authRepository.AddNewClient(clientInfo);
-
-            //Not sure what the above will actually return on an insert query?
-            if ()
-            {
-                return new OkResult();
-            }
-
-            return new UnauthorizedResult();
-        }
- 
-        
-
-
     }
 }

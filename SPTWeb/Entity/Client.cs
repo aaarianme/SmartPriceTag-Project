@@ -4,6 +4,10 @@ namespace SPTWeb.Entity
 {
     public class Client
     {
+        public Client()
+        {
+
+        }
         public Client(int ClientId, string Username,string Pass, string Salt, string Name)
         {
             this.ClientId = ClientId;

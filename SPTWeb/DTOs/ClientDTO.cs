@@ -1,4 +1,6 @@
-﻿namespace SPTWeb.DTOs
+﻿using SPTWeb.Entity;
+
+namespace SPTWeb.DTOs
 {
     public class ClientDTO
     {
@@ -12,5 +14,18 @@
         public string Username { get; set; }
         public string Pass { get; set; }
         public string Name { get; set; }
+
+
+        public Client ToClient()
+        {
+            Client newClient = new Client();
+
+            newClient.Username = Username;
+            newClient.Pass = Pass;
+            newClient.Name = Name;
+
+            return newClient;
+        }
+
     }
 }

@@ -29,7 +29,7 @@ builder.Services.AddAuthorization(options =>
 #region Dependency Injection AddScoped
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
-
+builder.Services.AddScoped<IClientServices, ClientServices>();
 #endregion
 
 var app = builder.Build();
