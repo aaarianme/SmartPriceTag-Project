@@ -10,13 +10,14 @@ namespace SPTWeb.Repository
         
         
 
-        public async Task<Client> GetClient(string username)
+        public async Task<Client> Get(string username)
         {
             object parameters = new { username = username};
             return await dbConn.QuerySingleAsync<Client>("select * from clients where Username=@username",parameters);
+
         }
 
-        public async Task<Client> GetClient(int clientId)
+        public async Task<Client> Get(int clientId)
         {
             throw new NotImplementedException();
         }
