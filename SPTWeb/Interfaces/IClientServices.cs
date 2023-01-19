@@ -6,8 +6,11 @@ namespace SPTWeb.Interfaces
 {
     public interface IClientServices
     {
-        public Task<Client> GetClient(string username);
-        public Task<Client> GetClient(int clientId);
+        /// <summary>
+        /// Adds a new client
+        /// </summary>
+        /// <param name="clientInfo"></param>
+        /// <returns>OK200 If added. BadRequest400 if error</returns>
         public Task<IActionResult> AddClient(ClientDTO clientInfo);
     }
 }

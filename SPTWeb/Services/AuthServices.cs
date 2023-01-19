@@ -15,13 +15,13 @@ namespace SPTWeb.Services
     public class AuthServices : IAuthServices
     {
         
-        IClientServices clientServices;
+        IClientRepository clientRepository;
         PasswordHasher passwordHasher;
         #region Dependency Injection
-        public AuthServices(IClientServices clientServices)
+        public AuthServices(IClientRepository clientRepository)
         {
-            this.clientServices = clientServices;
             passwordHasher = new PasswordHasher();
+            this.clientRepository = clientRepository;
         }
         #endregion
 
@@ -29,7 +29,7 @@ namespace SPTWeb.Services
 
         public async Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword)
         {
-            var client = await clientServices.GetClient(clientUsername);
+            var client = await clientRepository.Get(clientUsername);
             if (client == null) return new UnauthorizedResult();
             var isVerified = passwordHasher.VerifyPassword(client.Pass, clientPassword, client.Salt);
             if (!isVerified) return new UnauthorizedResult();

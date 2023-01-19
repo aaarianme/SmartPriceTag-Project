@@ -18,18 +18,7 @@ namespace SPTWeb.Services
         }
         #endregion
 
-        public async Task<Client> GetClient(string username)
-        {
-            //Activitylog
-
-            return await clientRepository.Get(username);
-        }
-        public async Task<Client> GetClient(int clientId)
-        {
-            //Activitylog
-            
-            return await clientRepository.Get(clientId);
-        }
+        
 
         public async Task<IActionResult> AddClient(ClientDTO clientInfo)
         {
@@ -37,7 +26,6 @@ namespace SPTWeb.Services
             var clientExists = await clientRepository.Get(clientInfo.Username);
 
             if (clientExists != null) return new BadRequestObjectResult(new { message = $"Username {clientInfo.Username} is already taken" });
-
             Client newClient = clientInfo.ToClient();
             string hashedPass = passwordHasher.HashPassword(newClient.Pass, out byte[] salt);
             newClient.Pass = hashedPass;

@@ -12,14 +12,14 @@ namespace SPTWeb.Repository
         public async Task<Client> Get(string username)
         {
             object parameters = new { username = username};
-            return await dbConn.QuerySingleAsync<Client>("select * from clients where Username=@username",parameters);
+            return await dbConn.QueryFirstOrDefaultAsync<Client>("select * from clients where Username=@username",parameters);
 
         }
 
         public async Task<Client> Get(int clientId)
         {
             object parameters = new { clientId = clientId };
-            return await dbConn.QuerySingleAsync<Client>("select * from clients where clientId=@clientId", parameters);
+            return await dbConn.QueryFirstOrDefaultAsync<Client>("select * from clients where clientId=@clientId", parameters);
         }
 
         public async Task Add(Client clientInfo)
