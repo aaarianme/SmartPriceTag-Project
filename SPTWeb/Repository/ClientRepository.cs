@@ -16,9 +16,11 @@ namespace SPTWeb.Repository
             return await dbConn.QuerySingleAsync<Client>("select * from clients where Username=@username",parameters);
         }
 
+        //Gets a client based on an ID
         public async Task<Client> GetClient(int clientId)
         {
-            throw new NotImplementedException();
+            object parameters = new { clientId = clientId };
+            return await dbConn.QuerySingleAsync<Client>("select * from clients where clientId=@clientId", parameters);
         }
     }
 }
