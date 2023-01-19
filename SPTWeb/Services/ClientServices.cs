@@ -26,7 +26,7 @@ namespace SPTWeb.Services
         public async Task<Client> GetClient(int clientId)
         {
             //Activitylog
-
+            
             return await clientRepository.Get(clientId);
         }
 
