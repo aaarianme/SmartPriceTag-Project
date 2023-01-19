@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\SPTWeb",
+    "\\SPTWeb\\Services"
   ],
+  "SelectedNode": "\\SPTWeb\\Services\\ClientServices.cs",
   "PreviewInSolutionExplorer": false
 }
