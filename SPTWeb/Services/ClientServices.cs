@@ -2,17 +2,18 @@
 using SPTWeb.DTOs;
 using SPTWeb.Entity;
 using SPTWeb.Interfaces;
+using SPTWeb.PasswordHelpers;
 
 namespace SPTWeb.Services
 {
     public class ClientServices : IClientServices
     {
-        IAuthServices authServices;
+        PasswordHasher passwordHasher;
         IClientRepository clientRepository;
         #region Depencency Injection
         public ClientServices(IAuthServices authServices, IClientRepository clientRepo)
         {
-            this.authServices = authServices;
+            this.passwordHasher = new PasswordHasher();
             this.clientRepository = clientRepo;
         }
         #endregion
@@ -38,10 +39,10 @@ namespace SPTWeb.Services
             if (clientExists != null) return new BadRequestObjectResult(new { message = $"Username {clientInfo.Username} is already taken" });
 
             Client newClient = clientInfo.ToClient();
-            string hashedPass = authServices.HashPassword(newClient.Pass, out byte[] salt);
+            string hashedPass = passwordHasher.HashPassword(newClient.Pass, out byte[] salt);
             newClient.Pass = hashedPass;
-            newClient.Salt = Convert.ToHexString(salt);
-            var success = clientRepository.Add(newClient);
+            newClient.Salt = passwordHasher.ConvertFromByteArrayToString(salt);
+            await clientRepository.Add(newClient);
             return new OkResult();
         }
 
