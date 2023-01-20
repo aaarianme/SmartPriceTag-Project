@@ -16,7 +16,7 @@ namespace SPTWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewClient(ClientDTO newClientInfo)
         {
-            return await clientServices.AddClient(newClientInfo);
+            return await clientServices.HandleAddClient(newClientInfo);
         }
     }
 }

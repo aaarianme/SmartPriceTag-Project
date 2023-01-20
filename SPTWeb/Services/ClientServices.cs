@@ -20,7 +20,7 @@ namespace SPTWeb.Services
 
         
 
-        public async Task<IActionResult> AddClient(ClientDTO clientInfo)
+        public async Task<IActionResult> HandleAddClient(ClientDTO clientInfo)
         {
             //Checking if username already exists
             var clientExists = await clientRepository.Get(clientInfo.Username);
@@ -30,9 +30,10 @@ namespace SPTWeb.Services
             string hashedPass = passwordHasher.HashPassword(newClient.Pass, out byte[] salt);
             newClient.Pass = hashedPass;
             newClient.Salt = passwordHasher.ConvertFromByteArrayToString(salt);
-            await clientRepository.Add(newClient);
+            var newClientId = await clientRepository.Add(newClient);
             return new OkResult();
         }
+
 
         
     }

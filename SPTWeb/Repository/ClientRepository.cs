@@ -22,11 +22,12 @@ namespace SPTWeb.Repository
             return await dbConn.QueryFirstOrDefaultAsync<Client>("select * from clients where clientId=@clientId", parameters);
         }
 
-        public async Task Add(Client clientInfo)
+        public async Task<int> Add(Client clientInfo)
         {
             object parameters = new { username = clientInfo.Username, password = clientInfo.Pass, name = clientInfo.Name ,salt=clientInfo.Salt };
 
-            await dbConn.QueryAsync("INSERT INTO clients (Username, Pass, Salt, Name) VALUES (@username, @password, @salt, @name)", parameters);
+            return await dbConn.QuerySingleAsync<int>(@"INSERT INTO clients (Username, Pass, Salt, Name) VALUES (@username, @password, @salt, @name);
+                                            SELECT LAST_INSERT_ID(); ", parameters);
         }
     }
 }

@@ -11,6 +11,6 @@ namespace SPTWeb.Interfaces
         /// </summary>
         /// <param name="clientInfo"></param>
         /// <returns>OK200 If added. BadRequest400 if error</returns>
-        public Task<IActionResult> AddClient(ClientDTO clientInfo);
+        public Task<IActionResult> HandleAddClient(ClientDTO clientInfo);
     }
 }

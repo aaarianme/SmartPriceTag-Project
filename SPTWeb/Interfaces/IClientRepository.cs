@@ -25,6 +25,6 @@ namespace SPTWeb.Interfaces
         /// </summary>
         /// <param name="clientInfo">Must have everything exept for id</param>
         /// <returns>The ClientId of the new client added</returns>
-        public Task Add(Client clientInfo);
+        public Task<int> Add(Client clientInfo);
     }
 }
