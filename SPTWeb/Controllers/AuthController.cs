@@ -31,6 +31,7 @@ namespace SPTWeb.Controllers
                 AllowRefresh = true,
                 IsPersistent = true,
                 IssuedUtc = DateTime.Now,
+                
             };
             var claims = new List<Claim>
             {
