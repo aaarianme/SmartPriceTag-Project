@@ -32,7 +32,7 @@ namespace SPTWeb.Services
             var client = await clientRepository.Get(clientUsername);
             if (client == null) return new UnauthorizedResult();
             var isVerified = passwordHasher.VerifyPassword(client.Pass, clientPassword, client.Salt);
-            if (!isVerified) return new UnauthorizedResult();
+            if (!isVerified) return new UnauthorizedObjectResult(new { message="hi" });
             return new OkResult();
         }
     }

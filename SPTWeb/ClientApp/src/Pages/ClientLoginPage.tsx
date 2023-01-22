@@ -1,30 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { useGetRequest } from "../Hooks/HttpsRequest";
+import { useNavigate } from "react-router-dom";
 import {
   PopUpTrigger,
   usePopUpManager,
   MessagePopUp,
+  ErrorPopUp,
 } from "../Hooks/usePopUpManager";
+
 export default function ClientLoginPage() {
   const [loaded, result, makeGetRequest] = useGetRequest();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
   const [setNewPopUp, removePopUp, popUp] = usePopUpManager();
 
-  var handleLogin = async () => {
-    await makeGetRequest("/api/auth/client", {
-      Username: username,
-      Password: password,
-    });
-    setNewPopUp(
-      <MessagePopUp
-        header="hi"
-        message="asas"
-        onButtonClick={() => {}}
-      ></MessagePopUp>
+  async function HandleLogin() {
+    var onLoginOk = () => {
+      localStorage.setItem("user", "master");
+      navigate("/u");
+    };
+    var onLoginFail = () => {
+      setNewPopUp(
+        <ErrorPopUp
+          header="That doesn't look right"
+          message="Username and/or password did not match our records. Please try again."
+          buttonText="Ok"
+          onButtonClick={removePopUp}
+        ></ErrorPopUp>
+      );
+    };
+    await makeGetRequest(
+      "/api/auth/client",
+      {
+        Username: username,
+        Password: password,
+      },
+      {
+        onSuccess: onLoginOk,
+        onFail: onLoginFail,
+      }
     );
-  };
+  }
   useEffect(() => {
     console.log(loaded, result);
   }, [loaded, result]);
@@ -62,7 +79,7 @@ export default function ClientLoginPage() {
             <a href="/login">Go back to login page</a>
           </p>
           <button
-            onClick={() => handleLogin()}
+            onClick={() => HandleLogin()}
             className="bg-blue-400 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
             type="button"
           >

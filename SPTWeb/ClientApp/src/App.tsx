@@ -3,6 +3,10 @@ import React from "react";
 import "./custom.css";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
+import {
+  ProtectedRoute,
+  ProtectedRoteAcceessMode,
+} from "./Components/ProtectedRoute";
 
 import HomePage from "./Pages/HomePage";
 //-------------------
@@ -26,7 +30,14 @@ export default function App() {
           <Route path="master" element={<ClientLoginPage />} />
           <Route path="store" element={<StoreLoginPage />} />
         </Route>
-        <Route path="u" element={<DashboardPage />} />
+        <Route
+          path="u"
+          element={
+            <ProtectedRoute accessFor={ProtectedRoteAcceessMode.masterOnly}>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

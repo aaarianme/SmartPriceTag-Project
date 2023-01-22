@@ -4,9 +4,9 @@ import axios from "axios";
 axios.defaults.baseURL = "https://localhost:5000/";
 
 interface HttpOptions {
-  onSuccess: Function | null;
-  onFail: Function | null;
-  finally: Function | null;
+  onSuccess?: Function;
+  onFail?: Function;
+  finally?: Function;
 }
 
 export function useGetRequest() {
@@ -32,10 +32,10 @@ export function useGetRequest() {
       })
       .then(() => {
         setLoaded(true);
-        httpsOptions?.onSuccess(Response);
+        httpsOptions?.onSuccess?.(Response);
       })
-      .catch((err: any) => httpsOptions?.onFail(err))
-      .finally(() => httpsOptions?.finally());
+      .catch((err: any) => httpsOptions?.onFail?.(err.response))
+      .finally(() => httpsOptions?.finally?.());
   };
   return [loaded, res, makeRequest] as const;
 }
