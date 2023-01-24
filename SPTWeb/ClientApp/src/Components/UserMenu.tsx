@@ -32,13 +32,19 @@ export default function UserMenu() {
                 </h1>
                 <div className="bg-white rounded-md list-none  text-center ">
                   <li className="py-3 border-b-2">
-                    <a href="/" className="list-none  hover:text-indigo-600">
-                      Add New Tags
+                    <a
+                      href="/u/stores"
+                      className="list-none  hover:text-indigo-600"
+                    >
+                      Stores
                     </a>
                   </li>
                   <li className="py-3 border-b-2">
-                    <a href="/" className="list-none  hover:text-indigo-600">
-                      Add New Tags
+                    <a
+                      href="/u/stores/view"
+                      className="list-none  hover:text-indigo-600"
+                    >
+                      Store Access
                     </a>
                   </li>
                   <li className="py-3 border-b-2">

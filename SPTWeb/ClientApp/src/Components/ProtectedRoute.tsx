@@ -21,12 +21,15 @@ export function ProtectedRoute(props: {
   var error: ProtectedRoteAcceessError = ProtectedRoteAcceessError.non;
   if (user === null || (user != "master" && user != "store"))
     error = ProtectedRoteAcceessError.loginNotFound;
-  if (
+  else if (
     props.accessFor == ProtectedRoteAcceessMode.masterOnly &&
     user != "master"
   )
     error = ProtectedRoteAcceessError.masterAccountOnly;
-  if (props.accessFor == ProtectedRoteAcceessMode.storeOnly && user != "store")
+  else if (
+    props.accessFor == ProtectedRoteAcceessMode.storeOnly &&
+    user != "store"
+  )
     error = ProtectedRoteAcceessError.switchToStoreView;
 
   if (error == ProtectedRoteAcceessError.non) return props.children;

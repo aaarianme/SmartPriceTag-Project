@@ -17,7 +17,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
-        options.Cookie.Name = "auth";
         
     });
 builder.Services.AddAuthorization(options =>
@@ -32,6 +31,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientServices, ClientServices>();
+builder.Services.AddScoped<IStoreServices, StoreServices>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 #endregion
 
 var app = builder.Build();

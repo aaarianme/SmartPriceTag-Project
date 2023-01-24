@@ -1,9 +1,17 @@
 import React from "react";
 import { ProtectedRoteAcceessError } from "../Components/ProtectedRoute";
+import LoginPage from "./LoginPage";
 export default function AccountSwitchNeededPage(props: {
   error: ProtectedRoteAcceessError;
 }) {
-  return (
+  return props.error == ProtectedRoteAcceessError.loginNotFound ? (
+    <div>
+      <div className="w-auto m-4 bg-red-300 border-rose-400 border-4 border-solid p-2 text-rose-800 rounded-sm">
+        The resource you are trying to access is protected. Login first.
+      </div>
+      <LoginPage></LoginPage>
+    </div>
+  ) : (
     <div className="flex h-screen pb-40">
       <div className="m-auto">
         <div className="max-w-sm p-6 text-xl bg-white border border-gray-200 rounded-lg shadow-md">

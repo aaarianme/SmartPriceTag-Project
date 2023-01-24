@@ -12,5 +12,12 @@ namespace SPTWeb.Interfaces
         /// <param name="clientInfo"></param>
         /// <returns>OK200 If added. BadRequest400 if error</returns>
         public Task<IActionResult> HandleAddClient(ClientDTO clientInfo);
+        /// <summary>
+        /// Gets all stores that belongs to this client id
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<StoreDTO>> GetAllStores(int clientId);
+
     }
 }

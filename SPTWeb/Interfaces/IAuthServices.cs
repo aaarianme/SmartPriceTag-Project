@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPTWeb.DTOs;
+using SPTWeb.Entity;
 
 namespace SPTWeb.Interfaces
 {
@@ -11,8 +12,8 @@ namespace SPTWeb.Interfaces
         /// </summary>
         /// <param name="clientUsername">Username</param>
         /// <param name="clientPassword">pPassword</param>
-        /// <returns>OK 200 If verified. 401 UnAuthorized If invalid.</returns>
-        public Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword);
+        /// <returns>Clinet Entity If verified. null If invalid.</returns>
+        public Task<Client?> HandleClientLogin(string clientUsername, string clientPassword);
 
         
 

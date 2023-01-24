@@ -3,6 +3,7 @@ using SPTWeb.DTOs;
 using SPTWeb.Entity;
 using SPTWeb.Interfaces;
 using SPTWeb.PasswordHelpers;
+using System.Runtime.CompilerServices;
 
 namespace SPTWeb.Services
 {
@@ -10,15 +11,17 @@ namespace SPTWeb.Services
     {
         PasswordHasher passwordHasher;
         IClientRepository clientRepository;
+        IStoreRepository storeRepository;
         #region Depencency Injection
-        public ClientServices(IAuthServices authServices, IClientRepository clientRepo)
+        public ClientServices(IAuthServices authServices, IClientRepository clientRepo,IStoreRepository storeRepository)
         {
             this.passwordHasher = new PasswordHasher();
             this.clientRepository = clientRepo;
+            this.storeRepository = storeRepository;
         }
         #endregion
 
-        
+
 
         public async Task<IActionResult> HandleAddClient(ClientDTO clientInfo)
         {
@@ -35,6 +38,15 @@ namespace SPTWeb.Services
         }
 
 
-        
+        public async Task<IEnumerable<StoreDTO>> GetAllStores(int clientId)
+        {
+            List<StoreDTO> storeDTOs=new List<StoreDTO>();
+            var allStores = await storeRepository.GetAll(clientId);
+            foreach (Store s in allStores) storeDTOs.Add(s.ToStoreDTO());
+            return storeDTOs;
+        }
+
+
+
     }
 }

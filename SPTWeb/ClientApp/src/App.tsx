@@ -18,6 +18,8 @@ import LoginOutlet from "./Pages/LoginOutlet";
 import LoginPage from "./Pages/LoginPage";
 import ClientLoginPage from "./Pages/ClientLoginPage";
 import StoreLoginPage from "./Pages/StoreLoginPage";
+import ClientDashboardOutlet from "./Pages/ClientDashboardOutlet";
+import ClientStoresPage from "./Pages/ClientStoresPage";
 //-------------------
 
 export default function App() {
@@ -34,10 +36,13 @@ export default function App() {
           path="u"
           element={
             <ProtectedRoute accessFor={ProtectedRoteAcceessMode.masterOnly}>
-              <DashboardPage />
+              <ClientDashboardOutlet />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<DashboardPage />} />
+          <Route path="stores" element={<ClientStoresPage />} />
+        </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

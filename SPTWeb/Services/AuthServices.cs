@@ -27,13 +27,13 @@ namespace SPTWeb.Services
 
         
 
-        public async Task<IActionResult> HandleClientLogin(string clientUsername, string clientPassword)
+        public async Task<Client?> HandleClientLogin(string clientUsername, string clientPassword)
         {
             var client = await clientRepository.Get(clientUsername);
-            if (client == null) return new UnauthorizedResult();
+            if (client == null) return null;
             var isVerified = passwordHasher.VerifyPassword(client.Pass, clientPassword, client.Salt);
-            if (!isVerified) return new UnauthorizedObjectResult(new { message="hi" });
-            return new OkResult();
+            if (!isVerified) return null;
+            return client;
         }
     }
 }
