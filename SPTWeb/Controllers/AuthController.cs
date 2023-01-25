@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using SPTWeb.Interfaces;
+using System.Linq;
 using System.Security.Claims;
 
 namespace SPTWeb.Controllers
@@ -21,30 +23,22 @@ namespace SPTWeb.Controllers
         [HttpGet, Route("client")]
         public async Task<IActionResult> LoginClientRequest(string username, string password)
         {
-            var authRes = await authServices.HandleClientLogin(username, password);
-            if (authRes == null) return new UnauthorizedResult();
-
-            var authProperties = new AuthenticationProperties
-            {
-                AllowRefresh = true,
-                IsPersistent = true,
-                IssuedUtc = DateTime.Now,
-
-            };
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Role, "client"),
-                new Claim(ClaimTypes.Name, authRes.ClientId.ToString()),
-            };
-
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
+            var token = await authServices.HandleClientLogin(username, password);
+            if (token == null) return new UnauthorizedResult();
+            var options = new CookieOptions();
+            options.HttpOnly = true;
+            options.IsEssential = true;
+            options.Expires = DateTimeOffset.Now.AddDays(7);
+            Response.Cookies.Append("auth", token, options);
             return Ok();
+            
+
+        }
+
+        [HttpGet, Route("test")]
+        public async Task<IActionResult> aasa(string username, string password)
+        {
+            return new OkObjectResult(new { username = User.Identity?.Name, isauth = User.Identity?.IsAuthenticated });
         }
 
         [HttpGet, Route("store")]

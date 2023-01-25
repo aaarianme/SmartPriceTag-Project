@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
+import axios, { AxiosPromise } from "axios";
 
 axios.defaults.baseURL = "https://localhost:5000/";
-
+axios.defaults.withCredentials = true;
 interface HttpOptions {
   onSuccess?: Function;
   onFail?: Function;
@@ -19,24 +19,22 @@ export function useGetRequest() {
    * @param param url querys
    * @param httpsOptions onSuccess gets the response, finally always runs, catch runs on errors with the error object passed into it
    */
-  const makeRequest = async (
+  async function makeRequest(
     path: string,
     param?: any | null,
     httpsOptions?: HttpOptions
-  ) => {
+  ) {
     setLoaded(false);
     await axios
       .get(path, { params: param })
       .then((Response: any) => {
-        setRes(Response);
-      })
-      .then(() => {
+        setRes(Response.data);
         setLoaded(true);
         httpsOptions?.onSuccess?.(Response);
       })
       .catch((err: any) => httpsOptions?.onFail?.(err.response))
       .finally(() => httpsOptions?.finally?.());
-  };
+  }
   return [loaded, res, makeRequest] as const;
 }
 

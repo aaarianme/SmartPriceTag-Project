@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 export interface ICellType {
-  text: string;
+  text: string | any;
   className?: string;
-  onClick?: Function;
+  onClick?: (cell: ICellType, row: ITableRow) => void;
 }
 export interface ITableRow {
   rowId?: any;
   cells: Array<ICellType>;
 }
+export interface ITableHeader {
+  text: any;
+  className?: string;
+}
 export interface ITableProps {
-  headers: Array<string>;
+  headers: Array<ITableHeader>;
   rows: Array<ITableRow>;
   isSelectable: boolean;
   onCheckChange: (isChecked: boolean, row: ITableRow) => void;
@@ -28,16 +32,20 @@ export function CustomTable(props: ITableProps) {
   }
 
   return (
-    <div className="m-5">
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="">
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-black">
           <thead className="text-xs text-gray-50 uppercase bg-gray-700">
             <tr>
               {props.isSelectable && <th scope="col" className="p-4"></th>}
               {props.headers.map((h, i) => {
                 return (
-                  <th scope="col" className="px-6 py-3 text-white" key={i}>
-                    {h}
+                  <th
+                    scope="col"
+                    className={"px-6 py-3 text-white " + h.className}
+                    key={i}
+                  >
+                    {h.text}
                   </th>
                 );
               })}

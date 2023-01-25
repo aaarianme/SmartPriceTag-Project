@@ -1,20 +1,11 @@
 import React, { useState } from "react";
 
 export default function HomePage() {
-  const [mydata, setData] = useState([]);
-  // eslint-disable-next-line
-  const [name, setName] = useState("");
-
   return (
     <div>
-      <input id="myinput" onChange={(e) => console.log(e)}></input>
-      <button onClick={() => setData([...mydata, name])}>add name</button>
-      <div>
-        <div></div>
-        {mydata.map((s, i) => (
-          <label>{s}</label>
-        ))}
-      </div>
+      <a href="/login/master">Master login</a>
+      <a href="/login/store">Store login</a>
+      <a href="/u">Master dashboard</a>
     </div>
   );
 }

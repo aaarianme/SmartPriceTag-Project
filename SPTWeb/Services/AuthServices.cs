@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using SPTWeb.Authentications;
 using SPTWeb.DTOs;
 using SPTWeb.Entity;
 using SPTWeb.Interfaces;
@@ -17,23 +18,30 @@ namespace SPTWeb.Services
         
         IClientRepository clientRepository;
         PasswordHasher passwordHasher;
+        AuthTokenGenerator authTokenGenerator;
         #region Dependency Injection
         public AuthServices(IClientRepository clientRepository)
         {
             passwordHasher = new PasswordHasher();
+            authTokenGenerator = new AuthTokenGenerator();
             this.clientRepository = clientRepository;
         }
         #endregion
 
         
 
-        public async Task<Client?> HandleClientLogin(string clientUsername, string clientPassword)
+        public async Task<string?> HandleClientLogin(string clientUsername, string clientPassword)
         {
             var client = await clientRepository.Get(clientUsername);
             if (client == null) return null;
             var isVerified = passwordHasher.VerifyPassword(client.Pass, clientPassword, client.Salt);
+            var claims = new List<Claim> {
+                new Claim(ClaimTypes.Role,"client"),
+                new Claim(ClaimTypes.NameIdentifier,client.ClientId.ToString())
+            };
+
             if (!isVerified) return null;
-            return client;
+            return authTokenGenerator.GenerateToken(claims);
         }
     }
 }

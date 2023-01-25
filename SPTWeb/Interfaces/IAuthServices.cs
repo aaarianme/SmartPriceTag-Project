@@ -13,7 +13,7 @@ namespace SPTWeb.Interfaces
         /// <param name="clientUsername">Username</param>
         /// <param name="clientPassword">pPassword</param>
         /// <returns>Clinet Entity If verified. null If invalid.</returns>
-        public Task<Client?> HandleClientLogin(string clientUsername, string clientPassword);
+        public Task<string?> HandleClientLogin(string clientUsername, string clientPassword);
 
         
 

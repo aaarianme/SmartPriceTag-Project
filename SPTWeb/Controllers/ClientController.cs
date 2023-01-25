@@ -20,12 +20,10 @@ namespace SPTWeb.Controllers
             return await clientServices.HandleAddClient(newClientInfo);
         }
 
-        [HttpGet,Route("stores")]
+        [HttpGet,Route("stores"),Authorize(policy:"client")]
         public async Task<IActionResult> GetAllStores()
         {
-            var user = User.Claims;
-            var isauth = User.Identity.IsAuthenticated;
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.UserData));
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             return  new OkObjectResult(new { stores= await clientServices.GetAllStores(userId) });
         }
     }

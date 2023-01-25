@@ -27,7 +27,7 @@ export default function LoginPage() {
                 </a>
               </div>
             </div>
-            <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-md">
               <BuildingStorefrontIcon className="text-gray-300 w-16 h-16" />
 
               <p className="my-3 font-normal text-gray-500 dark:text-gray-400">
