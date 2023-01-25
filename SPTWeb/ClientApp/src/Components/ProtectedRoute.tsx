@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
-import AccountSwitchNeededPage from "../Pages/AccountSwitchNeededPage";
+import useLocalStorage from "../Hooks/useLocalStorage";
+import Error403Or401Page from "../Pages/Error403Or401Page";
 export enum ProtectedRoteAcceessMode {
   masterOnly,
   storeOnly,
@@ -16,12 +17,13 @@ export function ProtectedRoute(props: {
   children: ReactElement;
   accessFor: ProtectedRoteAcceessMode;
 }) {
-  var user = localStorage.getItem("user");
+  const [getLS, setLS, removeLS] = useLocalStorage();
+  var user = getLS("userType");
   const navigate = useNavigate();
   var error: ProtectedRoteAcceessError = ProtectedRoteAcceessError.non;
-  if (user === null || (user != "master" && user != "store"))
+  if (user === null || (user != "master" && user != "store")) {
     error = ProtectedRoteAcceessError.loginNotFound;
-  else if (
+  } else if (
     props.accessFor == ProtectedRoteAcceessMode.masterOnly &&
     user != "master"
   )
@@ -33,5 +35,5 @@ export function ProtectedRoute(props: {
     error = ProtectedRoteAcceessError.switchToStoreView;
 
   if (error == ProtectedRoteAcceessError.non) return props.children;
-  return <AccountSwitchNeededPage error={error}></AccountSwitchNeededPage>;
+  return <Error403Or401Page error={error}></Error403Or401Page>;
 }

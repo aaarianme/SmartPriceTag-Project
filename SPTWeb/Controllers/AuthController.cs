@@ -12,10 +12,12 @@ namespace SPTWeb.Controllers
     public class AuthController : ControllerBase
     {
         IAuthServices authServices;
+        IClientServices clientServices;
         #region Dependecy Injection 
-        public AuthController(IAuthServices authServices)
+        public AuthController(IAuthServices authServices,IClientServices clientServices)
         {
             this.authServices = authServices;
+            this.clientServices = clientServices;
         }
         #endregion
 
@@ -30,7 +32,8 @@ namespace SPTWeb.Controllers
             options.IsEssential = true;
             options.Expires = DateTimeOffset.Now.AddDays(7);
             Response.Cookies.Append("auth", token, options);
-            return Ok();
+            var user = await clientServices.GetClientByUsername(username);
+            return new OkObjectResult(new {user=user});
             
 
         }
@@ -50,7 +53,7 @@ namespace SPTWeb.Controllers
         [HttpPost, Route("signout")]
         public async Task<IActionResult> SignOutUser()
         {
-            await HttpContext.SignOutAsync();
+            Response.Cookies.Delete("auth");
             return Ok();
         }
 

@@ -1,20 +1,26 @@
 //#region
 import React, { useState } from "react";
 import UserNavbar from "../Components/UserNavbar";
-import { PopUpTrigger, usePopUpManager } from "../Hooks/usePopUpManager";
-import { IStore } from "../Helpers/Interfaces";
+import {
+  ErrorPopUp,
+  FullPageLoaderPopUp,
+  MessagePopUp,
+  PopUpTrigger,
+  usePopUpManager,
+} from "../Hooks/usePopUpManager";
+import { IClient, IStore } from "../Helpers/Interfaces";
 import { usePostRequest } from "../Hooks/HttpsRequest";
-import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
+import useLocalStorage from "../Hooks/useLocalStorage";
 //#endregion
 export default function NewStorePage() {
   const [setPopUp, removePopUp, popUp] = usePopUpManager();
   const postReq = usePostRequest();
+  const [getLS, setLS, removeLS] = useLocalStorage();
   const [state, setState] = useState<IStore>({
     name: "",
     address: "",
     pin: "0000",
   } as IStore);
-  const [showLoading, setShowLoading] = useState<boolean>(false);
 
   function checkInputs(): string | null {
     if (state.name == null || state.name == "")
@@ -30,20 +36,35 @@ export default function NewStorePage() {
 
   async function handleSubmit() {
     if (errors != null) return;
-    setShowLoading(true);
+    setPopUp(
+      <FullPageLoaderPopUp loadingText="Adding a new store..."></FullPageLoaderPopUp>
+    );
     await postReq("/api/client/stores/new", state, {
-      finally: () => setShowLoading(false),
-      onSuccess: () => {},
-      onFail: () => {},
+      onSuccess: () => {
+        setPopUp(
+          <MessagePopUp
+            onButtonClick={removePopUp}
+            buttonText="Okay"
+            header="New Store Added!"
+            message="Your new store was added."
+          />
+        );
+      },
+      onFail: () => {
+        setPopUp(
+          <ErrorPopUp
+            onButtonClick={removePopUp}
+            buttonText="Okay"
+            header="Something went wrong"
+            message="Your new store was NOT added."
+          />
+        );
+      },
     });
   }
 
   return (
     <div>
-      <FullPageLoadingAnimator
-        text="This won't take long..."
-        show={showLoading}
-      ></FullPageLoadingAnimator>
       <UserNavbar></UserNavbar>
       <div>
         <div className="p-20 pt-10">
@@ -136,7 +157,7 @@ export default function NewStorePage() {
                               <label>
                                 Store Login Name:{" "}
                                 <span className="font-semibold">
-                                  {10001}
+                                  {getLS<IClient>("userInfo").clientId}
                                   {state.branchNumber}
                                 </span>
                               </label>

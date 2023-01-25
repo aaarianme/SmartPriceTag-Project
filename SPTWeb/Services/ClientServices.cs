@@ -52,5 +52,12 @@ namespace SPTWeb.Services
             if (client == null) return null;
             return client.ToClientDTO();
         }
+
+        public async Task<ClientDTO?> GetClientByUsername(string username)
+        {
+            var client = await clientRepository.Get(username);
+            if (client == null) return null;
+            return client.ToClientDTO();
+        }
     }
 }

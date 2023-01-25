@@ -27,6 +27,7 @@ namespace SPTWeb.Controllers
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var clientDto= await clientServices.GetClientById(userId); 
             if(clientDto == null) return NotFound();
+            clientDto.Pass = "";
             return new OkObjectResult(new { user = clientDto });
         }
 

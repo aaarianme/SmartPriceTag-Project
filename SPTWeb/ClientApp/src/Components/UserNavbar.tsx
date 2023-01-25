@@ -19,14 +19,17 @@ export default function UserNavbar() {
               <div className="flex items-center font-header">
                 <div className="md:flex items-center hidden space-x-4 ml-8 lg:ml-12">
                   <a
-                    href="u"
+                    href="/u"
                     className="py-2 hover:cursor-pointer px-4 rounded text-white bg-gray-600 hover:shadow-lg"
                   >
                     Dashboard
                   </a>
-                  <h1 className="py-2 hover:cursor-pointer px-4 rounded text-white bg-gray-600 hover:shadow-lg">
+                  <a
+                    href="/signout"
+                    className="py-2 hover:cursor-pointer px-4 rounded text-white bg-gray-600 hover:shadow-lg"
+                  >
                     Sign Out
-                  </h1>
+                  </a>
                 </div>
               </div>
             </div>

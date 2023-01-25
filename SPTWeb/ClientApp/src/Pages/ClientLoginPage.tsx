@@ -11,16 +11,20 @@ import {
   UserCircleIcon,
   BuildingStorefrontIcon,
 } from "@heroicons/react/24/solid";
+import useLocalStorage from "../Hooks/useLocalStorage";
+
 export default function ClientLoginPage() {
   const [loaded, result, makeGetRequest] = useGetRequest();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [setNewPopUp, removePopUp, popUp] = usePopUpManager();
-
+  const [getLS, setLS, removeLS] = useLocalStorage();
   async function HandleLogin() {
-    var onLoginOk = () => {
-      localStorage.setItem("user", "master");
+    var onLoginOk = (res) => {
+      var { user } = res.data;
+      setLS("userInfo", user);
+      setLS("userType", "master");
       navigate("/u");
     };
     var onLoginFail = () => {

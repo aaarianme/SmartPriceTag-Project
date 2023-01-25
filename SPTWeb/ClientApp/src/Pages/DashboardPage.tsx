@@ -12,10 +12,13 @@ import { LinkCard } from "../Components/CustomCards";
 import { useGetRequest } from "../Hooks/HttpsRequest";
 import { IClient } from "../Helpers/Interfaces";
 import { useNavigate } from "react-router-dom";
+import useLocalStorage from "../Hooks/useLocalStorage";
 
 export default function DashboardPage() {
   const [loaded, res, makeGetRequest] = useGetRequest();
   const [state, setState] = useState<IClient>({} as IClient);
+  const [getLS, setLS, removeLS] = useLocalStorage();
+  var userInfoLS = getLS<IClient>("userInfo");
   const navigate = useNavigate();
 
   async function getUser() {
@@ -33,12 +36,9 @@ export default function DashboardPage() {
     );
   }
   useEffect(() => {
-    getUser();
+    //getUser();
   }, []);
 
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
   return (
     <div>
       <UserNavbar></UserNavbar>
@@ -47,7 +47,7 @@ export default function DashboardPage() {
           <section className="px-20 pt-10">
             <div className="col-span-5 bo border-b-2">
               <label className="text-5xl font-thin text-gray-600 px-3 mb-3">
-                Hi {state.name}!
+                Hi {userInfoLS.name}!
               </label>
             </div>
             <div className="bg-white grid grid-cols-5 py-6 min-h-full grid-rows-2 gap-x-3 gap-y-3 px-4">

@@ -4,7 +4,18 @@ namespace SPTWeb.DTOs
 {
     public class StoreDTO
     {
-        public StoreDTO(string name, string address, int branchNumber, bool isActive, DateTime createdOn)
+        public StoreDTO()
+        {
+
+        }
+        public StoreDTO(string name, string address, int branchNumber, string pin)
+        {
+            Name = name;
+            Address = address;
+            BranchNumber = branchNumber;
+            this.PIN = pin;
+        }
+        public StoreDTO(string name, string address, int branchNumber, DateTime createdOn, bool isActive = false)
         {
             Name = name;
             Address = address;

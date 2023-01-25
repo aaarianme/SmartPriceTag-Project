@@ -1,10 +1,6 @@
 import { ReactElement, useState } from "react";
 import React from "react";
-
-interface IpopUpManagerOptions {
-  popUp: ReactElement;
-  visible: boolean;
-}
+import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
 
 export function usePopUpManager() {
   const [popUp, setPopUp] = useState<ReactElement | null>();
@@ -196,6 +192,14 @@ export function ErrorPopUp(props: IErrorPopUp) {
       </div>
     </div>
   );
+}
+interface IFullPageLoaderPopUp {
+  loadingText?: string | any;
+  timeout?: boolean;
+  timeOutFunction?: Function;
+}
+export function FullPageLoaderPopUp(props: IFullPageLoaderPopUp) {
+  return <FullPageLoadingAnimator text={props.loadingText} show={true} />;
 }
 
 /*

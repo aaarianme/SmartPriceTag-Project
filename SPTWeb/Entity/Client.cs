@@ -25,7 +25,7 @@ namespace SPTWeb.Entity
 
         public ClientDTO ToClientDTO()
         {
-            return new ClientDTO(Username, Pass, Name);
+            return new ClientDTO(ClientId.ToString(),Username, Pass, Name);
         }
     }
 }

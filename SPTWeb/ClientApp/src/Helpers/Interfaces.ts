@@ -8,6 +8,7 @@ export interface IStore {
   pin: string;
 }
 export interface IClient {
+  clientId: string | number;
   name: string;
   userName: string;
   pass: string;

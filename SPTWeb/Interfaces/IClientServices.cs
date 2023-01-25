@@ -24,6 +24,8 @@ namespace SPTWeb.Interfaces
         /// <param name="id">Returns dto of a client or null if not found</param>
         /// <returns>null if not found</returns>
         public Task<ClientDTO?> GetClientById(int id);
+        public Task<ClientDTO?> GetClientByUsername(string username);
+
 
     }
 }
