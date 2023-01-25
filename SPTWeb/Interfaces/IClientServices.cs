@@ -18,6 +18,12 @@ namespace SPTWeb.Interfaces
         /// <param name="clientId"></param>
         /// <returns></returns>
         public Task<IEnumerable<StoreDTO>> GetAllStores(int clientId);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Returns dto of a client or null if not found</param>
+        /// <returns>null if not found</returns>
+        public Task<ClientDTO?> GetClientById(int id);
 
     }
 }

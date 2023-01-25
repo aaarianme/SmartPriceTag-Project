@@ -7,4 +7,9 @@ export interface IStore {
   isActive: boolean;
   pin: string;
 }
+export interface IClient {
+  name: string;
+  userName: string;
+  pass: string;
+}
 //#endregion

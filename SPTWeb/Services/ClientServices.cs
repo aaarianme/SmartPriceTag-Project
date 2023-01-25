@@ -46,7 +46,11 @@ namespace SPTWeb.Services
             return storeDTOs;
         }
 
-
-
+        public async Task<ClientDTO?> GetClientById(int id)
+        {
+            var client = await clientRepository.Get(id);
+            if (client == null) return null;
+            return client.ToClientDTO();
+        }
     }
 }

@@ -14,10 +14,20 @@ namespace SPTWeb.Controllers
         {
             this.clientServices = clientServices;
         }
+
         [HttpPost]
         public async Task<IActionResult> AddNewClient(ClientDTO newClientInfo)
         {
             return await clientServices.HandleAddClient(newClientInfo);
+        }
+
+        [HttpGet,Authorize(Policy = "client")]
+        public async Task<IActionResult> GetClient()
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var clientDto= await clientServices.GetClientById(userId); 
+            if(clientDto == null) return NotFound();
+            return new OkObjectResult(new { user = clientDto });
         }
 
         [HttpGet,Route("stores"),Authorize(policy:"client")]

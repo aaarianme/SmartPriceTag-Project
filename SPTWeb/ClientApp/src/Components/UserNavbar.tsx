@@ -4,8 +4,8 @@ export default function UserNavbar() {
   return (
     <div>
       <header>
-        <nav className="shadow-sm">
-          <div className="flex justify-between bg-gray-800 items-center py-6 px-10 container mx-auto">
+        <nav className="bg-gray-800">
+          <div className="flex justify-between  items-center py-6 px-10 container mx-auto">
             <div className="flex items-start">
               <div className="flex h-10 w-10 items-center text-gray-400 justify-center rounded-full p-1">
                 <TagIcon></TagIcon>
