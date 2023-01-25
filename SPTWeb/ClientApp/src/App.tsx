@@ -20,6 +20,7 @@ import ClientLoginPage from "./Pages/ClientLoginPage";
 import StoreLoginPage from "./Pages/StoreLoginPage";
 import ClientDashboardOutlet from "./Pages/ClientDashboardOutlet";
 import ClientStoresPage from "./Pages/ClientStoresPage";
+import NewStorePage from "./Pages/NewStorePage";
 //-------------------
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
         >
           <Route index element={<DashboardPage />} />
           <Route path="stores" element={<ClientStoresPage />} />
+          <Route path="stores/new" element={<NewStorePage />} />
         </Route>
         <Route path="*" element={<PageNotFound />} />
       </Routes>

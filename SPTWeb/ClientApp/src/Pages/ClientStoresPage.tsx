@@ -1,11 +1,6 @@
 //#region Imports
 import React, { useEffect, useReducer } from "react";
-import {
-  CustomTable,
-  ITableProps,
-  ICellType,
-  ITableRow,
-} from "../Components/CustomTable";
+import { CustomTable, ICellType, ITableRow } from "../Components/CustomTable";
 import { IStore } from "../Helpers/Interfaces";
 import { useGetRequest } from "../Hooks/HttpsRequest";
 import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
@@ -16,6 +11,7 @@ import {
   XCircleIcon,
   BuildingStorefrontIcon,
 } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 //#endregion
 
 //#region App state manager / useReducer Interfaces
@@ -54,6 +50,7 @@ export default function ClientStoresPage() {
     filterTextVal: null,
   } as IPageState);
   const [loaded, res, makeGetRequest] = useGetRequest();
+  const navigate = useNavigate();
   useEffect(() => {
     var makecall = async () => {
       await makeGetRequest(
@@ -75,7 +72,9 @@ export default function ClientStoresPage() {
   function handleAllStoresResponseError(err) {
     console.log(err);
   }
-  function storeViewRequest(cell: ICellType, row: ITableRow) {}
+  function storeViewRequest(cell: ICellType, row: ITableRow) {
+    navigate(`/u/stores/${row.rowId}/view`);
+  }
 
   function GenerateStoreRows(): Array<ITableRow> {
     var filtered = state.stores;
@@ -156,7 +155,9 @@ export default function ClientStoresPage() {
               <InlineIconCard
                 Icon={<BuildingStorefrontIcon className="text-gray-500" />}
                 textTop="Add New Store?"
-                onClick={() => {}}
+                onClick={() => {
+                  navigate("new");
+                }}
               ></InlineIconCard>
             </div>
             <div className="col-span-4">
@@ -196,10 +197,7 @@ export default function ClientStoresPage() {
                   placeholder="Search Names or Branch Numbers"
                   required
                 />
-                <button
-                  type="submit"
-                  className="text-white absolute right-2.5 bottom-4 bg-white-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
+                <button className="text-white absolute right-2.5 bottom-4 bg-white-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   Search
                 </button>
               </div>
