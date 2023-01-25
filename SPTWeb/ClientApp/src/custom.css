@@ -16,6 +16,15 @@ code {
   border-color: #1861ac;
 }
 
-.card {
-  @apply bg-red-100;
+.font-header {
+  font-family: "Aboreto", cursive;
+}
+@font-face {
+  font-family: "Aboreto";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+    U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: local("./Assets/Fonts/headerFont.ttf") format("woff2");
 }

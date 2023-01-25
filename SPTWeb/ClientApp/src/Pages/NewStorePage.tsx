@@ -3,10 +3,18 @@ import React, { useState } from "react";
 import UserNavbar from "../Components/UserNavbar";
 import { PopUpTrigger, usePopUpManager } from "../Hooks/usePopUpManager";
 import { IStore } from "../Helpers/Interfaces";
+import { usePostRequest } from "../Hooks/HttpsRequest";
+import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
 //#endregion
 export default function NewStorePage() {
   const [setPopUp, removePopUp, popUp] = usePopUpManager();
-  const [state, setState] = useState<IStore>({} as IStore);
+  const postReq = usePostRequest();
+  const [state, setState] = useState<IStore>({
+    name: "",
+    address: "",
+    pin: "0000",
+  } as IStore);
+  const [showLoading, setShowLoading] = useState<boolean>(false);
 
   function checkInputs(): string | null {
     if (state.name == null || state.name == "")
@@ -14,14 +22,29 @@ export default function NewStorePage() {
     if (state.branchNumber == null) return "Branch Number Msut Be Provided";
     if (state.pin == null) return "PINMsut Be Provided";
     if (state.pin.length != 4) return "PIN Msut Be 4 DIGITS";
-    if (state.pin) return "PIN Msut Be 4 DIGITS";
+    if (!/^\d+$/.test(state.pin)) return "PIN can only be made of numbers";
 
     return null;
   }
   var errors = checkInputs();
 
+  async function handleSubmit() {
+    if (errors != null) return;
+    setShowLoading(true);
+    await postReq("/api/client/stores/new", state, {
+      finally: () => setShowLoading(false),
+      onSuccess: () => {},
+      onFail: () => {},
+    });
+  }
+
   return (
     <div>
+      <FullPageLoadingAnimator
+        text="This won't take long..."
+        show={showLoading}
+      ></FullPageLoadingAnimator>
+      <UserNavbar></UserNavbar>
       <div>
         <div className="p-20 pt-10">
           <div className="">
@@ -37,7 +60,7 @@ export default function NewStorePage() {
               </div>
             </div>
             <div className="mt-5 md:col-span-2 md:mt-0">
-              <div className="overflow-hidden shadow sm:rounded-md">
+              <div className="overflow-hidden shadow-sm">
                 <div className="bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
@@ -49,9 +72,10 @@ export default function NewStorePage() {
                       </label>
                       <input
                         value={state.name}
-                        type="text"
+                        onChange={(e) =>
+                          setState({ ...state, name: e.target.value })
+                        }
                         name="first-name"
-                        id="first-name"
                         className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -65,9 +89,10 @@ export default function NewStorePage() {
                       </label>
                       <input
                         value={state.address}
-                        type="text"
+                        onChange={(e) =>
+                          setState({ ...state, address: e.target.value })
+                        }
                         name="first-name"
-                        id="first-name"
                         className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -80,9 +105,12 @@ export default function NewStorePage() {
                       </label>
                       <input
                         value={state.branchNumber}
-                        type="text"
-                        name="first-name"
-                        id="first-name"
+                        onChange={(e) =>
+                          setState({
+                            ...state,
+                            branchNumber: parseInt(e.target.value),
+                          })
+                        }
                         className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -97,11 +125,11 @@ export default function NewStorePage() {
                         </label>
                         <div className="flex flex-row gap-5">
                           <input
-                            value={state.pin}
-                            type="text"
-                            name="first-name"
-                            id="first-name"
                             className="mt-1 inline-block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            value={state.pin}
+                            onChange={(e) =>
+                              setState({ ...state, pin: e.target.value })
+                            }
                           />
                           {errors == null ? (
                             <div className="w-100 border-l-2 border-l-blue-600 bg-blue-50 rounded px-2">
@@ -136,7 +164,9 @@ export default function NewStorePage() {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
-                    type="submit"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     Creat New Store Account

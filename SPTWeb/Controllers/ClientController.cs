@@ -26,5 +26,12 @@ namespace SPTWeb.Controllers
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             return  new OkObjectResult(new { stores= await clientServices.GetAllStores(userId) });
         }
+
+        [HttpPost, Route("stores/new"), Authorize(policy: "client")]
+        public async Task<IActionResult> AddNewStore(StoreDTO store)
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            return new OkObjectResult(new { stores = await clientServices.GetAllStores(userId) });
+        }
     }
 }

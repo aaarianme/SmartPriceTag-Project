@@ -31,3 +31,32 @@ export function InlineIconCard(props: IInlineCard) {
     </div>
   );
 }
+interface ILinkCard {
+  text: any;
+  Icon: ReactElement;
+  onClick?: Function;
+  className: string;
+  link: any;
+}
+export function LinkCard(props: ILinkCard) {
+  return (
+    <a
+      className={props.onClick ? "cursor-pointer" : "w-auto"}
+      href={props.link}
+    >
+      <div
+        className={"flex items-start p-2 " + props.className}
+        onClick={() => {
+          props.onClick?.();
+        }}
+      >
+        <div className="flex h-14 w-12 items-center justify-center rounded-full">
+          {props.Icon}
+        </div>
+        <div className="ml-4 text-lg text-white">
+          <h2 className="font-thin mt-3">{props.text}</h2>
+        </div>
+      </div>
+    </a>
+  );
+}

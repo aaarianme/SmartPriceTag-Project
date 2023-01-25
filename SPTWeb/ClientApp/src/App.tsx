@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./custom.css";
-
+import "./Assets/Fonts/headerFont.ttf";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import {
   ProtectedRoute,

@@ -1,14 +1,14 @@
 import React from "react";
 import LoaderAnimator from "./LoaderAnimator";
 interface IFullPageLoadingAnimator {
-  loaded: boolean;
+  show: boolean;
   text?: string;
 }
 export default function FullPageLoadingAnimator(
   props: IFullPageLoadingAnimator
 ) {
   return (
-    props.loaded === false && (
+    props.show === true && (
       <div className="fixed z-10 inset-x-0 bottom-20 overflow-y-auto">
         <div className="flex items-end justify-center min-h-screen pt-4 px-4  text-center sm:block sm:p-0 pb-40">
           <div

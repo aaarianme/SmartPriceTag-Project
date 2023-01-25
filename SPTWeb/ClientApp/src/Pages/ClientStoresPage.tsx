@@ -75,7 +75,9 @@ export default function ClientStoresPage() {
   function storeViewRequest(cell: ICellType, row: ITableRow) {
     navigate(`/u/stores/${row.rowId}/view`);
   }
-
+  useEffect(() => {
+    console.log(state.stores);
+  }, [state.stores]);
   function GenerateStoreRows(): Array<ITableRow> {
     var filtered = state.stores;
     if (!filtered) return;
@@ -86,6 +88,7 @@ export default function ClientStoresPage() {
           x.name.toString().includes(state.filterTextVal)
       );
     }
+
     var storeRows: Array<ITableRow> =
       filtered.map((s, i) => {
         return {
@@ -115,97 +118,110 @@ export default function ClientStoresPage() {
 
   return (
     <div>
-      <FullPageLoadingAnimator loaded={state.storesLoaded} />
+      <FullPageLoadingAnimator show={!state.storesLoaded} />
       <UserNavbar></UserNavbar>
-      {state.stores != undefined ? (
-        <div className="px-20 pt-10">
-          <div className="grid grid-cols-6 gap-4">
-            <div key="1" className="col-span-2">
-              <InlineIconCard
-                Icon={
-                  <CheckCircleIcon className="text-green-500 border rounded-full"></CheckCircleIcon>
-                }
-                textTop={
-                  state.stores.filter((x) => x.isActive).length +
-                  " Active Stores"
-                }
-                textBottom={
-                  "Newest Store Opend On " +
-                  state.stores.sort(
-                    (a: IStore, b: IStore) =>
-                      new Date(b.createdOn).getDate() -
-                      new Date(a.createdOn).getDate()
-                  )[0].createdOn
-                }
-              ></InlineIconCard>
+      {state.stores !== undefined ? (
+        state.stores.length == 0 ? (
+          <>
+            <div className="w-100 p-20 mt-10 bg-red-400">
+              <p className="text-white text-xl">
+                You don't have any stores registered under your account. To add
+                your first store, click <a href="u/stores/new">here</a>.
+              </p>
             </div>
-            <div key="2" className="col-span-2">
-              <InlineIconCard
-                Icon={
-                  <XCircleIcon className="text-red-500 border rounded-full" />
-                }
-                textTop={
-                  state.stores.filter((x) => !x.isActive).length +
-                  " Disabled Stores"
-                }
-                textBottom="Disabled Stores cant't login"
-              ></InlineIconCard>
-            </div>
-            <div key="3" className="col-span-2">
-              <InlineIconCard
-                Icon={<BuildingStorefrontIcon className="text-gray-500" />}
-                textTop="Add New Store?"
-                onClick={() => {
-                  navigate("new");
-                }}
-              ></InlineIconCard>
-            </div>
-            <div className="col-span-4">
-              {storeRows.length > 0 ? (
-                <CustomTable
-                  isSelectable={false}
-                  headers={[
-                    { text: "Branch Number" },
-                    { text: "Name" },
-                    { text: "status" },
-                    { text: "Address" },
-                    { text: "Actions" },
-                  ]}
-                  onCheckChange={(isChecked: boolean, row: ITableRow) => {
-                    console.log(isChecked, row);
-                  }}
-                  rows={storeRows}
-                ></CustomTable>
-              ) : (
-                <p className="text-center text-rose-700 text-3xl mt-10">
-                  Nothing here :(
-                </p>
-              )}
-            </div>
-            <div className="row-span-2 col-span-2">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"></div>
-                <input
-                  type="search"
-                  onChange={(e) =>
-                    dispatch({
-                      action: ActionKind.setFilterTextVal,
-                      payload: e.target.value,
-                    })
-                  }
-                  className="block w-full p-4 ml-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-100 focus:ring-0 focus:ring-offset-0"
-                  placeholder="Search Names or Branch Numbers"
-                  required
-                />
-                <button className="text-white absolute right-2.5 bottom-4 bg-white-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  Search
-                </button>
+          </>
+        ) : (
+          <>
+            <div className="px-20 pt-10">
+              <div className="grid grid-cols-6 gap-4">
+                <div key="1" className="col-span-2">
+                  <InlineIconCard
+                    Icon={
+                      <CheckCircleIcon className="text-green-500 border rounded-full"></CheckCircleIcon>
+                    }
+                    textTop={
+                      state.stores.filter((x) => x.isActive).length +
+                      " Active Stores"
+                    }
+                    textBottom={
+                      "Newest Store Opend On " +
+                      state.stores.sort(
+                        (a: IStore, b: IStore) =>
+                          new Date(b.createdOn).getDate() -
+                          new Date(a.createdOn).getDate()
+                      )[0].createdOn
+                    }
+                  ></InlineIconCard>
+                </div>
+                <div key="2" className="col-span-2">
+                  <InlineIconCard
+                    Icon={
+                      <XCircleIcon className="text-red-500 border rounded-full" />
+                    }
+                    textTop={
+                      state.stores.filter((x) => !x.isActive).length +
+                      " Disabled Stores"
+                    }
+                    textBottom="Disabled Stores cant't login"
+                  ></InlineIconCard>
+                </div>
+                <div key="3" className="col-span-2">
+                  <InlineIconCard
+                    Icon={<BuildingStorefrontIcon className="text-gray-500" />}
+                    textTop="Add New Store?"
+                    onClick={() => {
+                      navigate("new");
+                    }}
+                  ></InlineIconCard>
+                </div>
+                <div className="col-span-4">
+                  {storeRows.length > 0 ? (
+                    <CustomTable
+                      isSelectable={false}
+                      headers={[
+                        { text: "Branch Number" },
+                        { text: "Name" },
+                        { text: "status" },
+                        { text: "Address" },
+                        { text: "Actions" },
+                      ]}
+                      onCheckChange={(isChecked: boolean, row: ITableRow) => {
+                        console.log(isChecked, row);
+                      }}
+                      rows={storeRows}
+                    ></CustomTable>
+                  ) : (
+                    <p className="text-center text-rose-700 text-3xl mt-10">
+                      Nothing here :(
+                    </p>
+                  )}
+                </div>
+                <div className="row-span-2 col-span-2">
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"></div>
+                    <input
+                      type="search"
+                      onChange={(e) =>
+                        dispatch({
+                          action: ActionKind.setFilterTextVal,
+                          payload: e.target.value,
+                        })
+                      }
+                      className="block w-full p-4 ml-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-100 focus:ring-0 focus:ring-offset-0"
+                      placeholder="Search Names or Branch Numbers"
+                      required
+                    />
+                    <button className="text-white absolute right-2.5 bottom-4 bg-white-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                      Search
+                    </button>
+                  </div>
+                </div>
+                <div className="..."></div>
+                <div className=""></div>
               </div>
             </div>
-            <div className="..."></div>
-            <div className=""></div>
-          </div>
-        </div>
+          </>
+        )
       ) : (
         <></>
       )}

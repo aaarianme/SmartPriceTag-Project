@@ -1,72 +1,72 @@
 import React from "react";
+import {
+  PresentationChartBarIcon,
+  UserCircleIcon,
+  BuildingStorefrontIcon,
+  RectangleGroupIcon,
+  CircleStackIcon,
+  ArrowLeftCircleIcon,
+} from "@heroicons/react/24/solid";
+import { LinkCard } from "../Components/CustomCards";
 
 export default function UserMenu() {
   return (
     <div>
       <main>
-        <section>
-          <div className="bg-gray-100 sm:grid grid-cols-5 grid-rows-2 px-4 py-6 min-h-full lg:min-h-screen space-y-6 sm:space-y-0 sm:gap-4">
-            <div className="h-96 col-span-4 bg-gradient-to-tr from-green-500 to-blue-400 rounded-md flex items-center">
-              <div className="ml-20 w-100">
-                <h2 className="text-white text-4xl">Central Hub Connected!</h2>
-                <p className="text-white mt-4 capitalize font-thin tracking-wider leading-7">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed,
-                  dolore?
-                </p>
-
-                <a
-                  href="/"
-                  className="uppercase inline-block mt-8 text-sm bg-white py-2 px-4 rounded font-semibold hover:bg-indigo-100"
-                >
-                  button
-                </a>
-              </div>
+        <section className="px-20 pt-10">
+          <div className="col-span-5 bo border-b-2">
+            <label className="text-5xl font-thin text-gray-600 px-3 mb-3">
+              Hi Username!
+            </label>
+          </div>
+          <div className="bg-white grid grid-cols-5 py-6 min-h-full grid-rows-2 gap-x-3 gap-y-3 px-4">
+            <div className="col-span-2">
+              <LinkCard
+                Icon={<BuildingStorefrontIcon className="text-white" />}
+                text="View All Stores"
+                className="bg-blue-500"
+                link="/u/stores"
+              ></LinkCard>
             </div>
-            <div className="h-96 col-span-1 ">
-              <div className="bg-white py-3 px-4 rounded-lg flex justify-around items-center ">
-                <p>username here</p>
-              </div>
-              <div className="bg-white  rounded-md">
-                <h1 className="text-center text-xl mt-4  bg-white py-2 rounded-md border-b-2 cursor-pointer  text-gray-600">
-                  Services
-                </h1>
-                <div className="bg-white rounded-md list-none  text-center ">
-                  <li className="py-3 border-b-2">
-                    <a
-                      href="/u/stores"
-                      className="list-none  hover:text-indigo-600"
-                    >
-                      Stores
-                    </a>
-                  </li>
-                  <li className="py-3 border-b-2">
-                    <a
-                      href="/u/stores/view"
-                      className="list-none  hover:text-indigo-600"
-                    >
-                      Store Access
-                    </a>
-                  </li>
-                  <li className="py-3 border-b-2">
-                    <a href="/" className="list-none  hover:text-indigo-600">
-                      ccc
-                    </a>
-                  </li>
-                  <li className="py-3 border-b-2">
-                    <a href="/" className="list-none  hover:text-indigo-600">
-                      ddd
-                    </a>
-                  </li>
-                  <li className="py-3 ">
-                    <a
-                      href="/"
-                      className="list-none border-b-2 hover:text-indigo-600"
-                    >
-                      eee
-                    </a>
-                  </li>
-                </div>
-              </div>
+            <div className="">
+              <LinkCard
+                Icon={<UserCircleIcon className="text-white" />}
+                text="MyProfile"
+                className="bg-gray-500"
+                link="/u/profile"
+              ></LinkCard>
+            </div>
+            <div className="col-span-2">
+              <LinkCard
+                Icon={<PresentationChartBarIcon className="text-white" />}
+                text="Store Reports"
+                className="bg-yellow-600"
+                link="/u/stores/report"
+              ></LinkCard>
+            </div>
+            <div className="col-span-2">
+              <LinkCard
+                Icon={<RectangleGroupIcon className="text-white" />}
+                text="Update All Tags"
+                className="bg-green-600"
+                link="/u/UpdateTags"
+              ></LinkCard>
+            </div>
+            <div className="col-span-2">
+              <LinkCard
+                Icon={<CircleStackIcon className="text-white" />}
+                text="Items Database"
+                className="bg-pink-600"
+                link="/u/items"
+              ></LinkCard>
+            </div>
+            <div className="">
+              <LinkCard
+                Icon={<ArrowLeftCircleIcon className="text-white" />}
+                text="Sign Out"
+                className="bg-red-800"
+                link="/u/items"
+              ></LinkCard>
             </div>
           </div>
         </section>

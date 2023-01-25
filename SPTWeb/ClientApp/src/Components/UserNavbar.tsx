@@ -1,25 +1,31 @@
+import { TagIcon } from "@heroicons/react/24/solid";
 import React from "react";
-
 export default function UserNavbar() {
   return (
     <div>
       <header>
-        <nav className="shadow">
-          <div className="flex justify-between items-center py-6 px-10 container mx-auto">
-            <div>
-              <h1 className="text-2xl font-semibold border-solid border-1 border-yellow-500 text-yellow-500 p-1 rounded-md hover:cursor-pointer">
-                Smart Price Tag System
+        <nav className="shadow-sm">
+          <div className="flex justify-between bg-gray-800 items-center py-6 px-10 container mx-auto">
+            <div className="flex items-start">
+              <div className="flex h-10 w-10 items-center text-gray-400 justify-center rounded-full p-1">
+                <TagIcon></TagIcon>
+              </div>
+              <h1 className="text-2xl font-header border-solid text-gray-300 p-1 rounded-md">
+                SPT Master
               </h1>
             </div>
 
             <div>
-              <div className="flex items-center">
+              <div className="flex items-center font-header">
                 <div className="md:flex items-center hidden space-x-4 ml-8 lg:ml-12">
-                  <h1 className="text-text-gray-600  py-2 hover:cursor-pointer hover:text-indigo-600">
-                    aaa
-                  </h1>
-                  <h1 className="text-text-gray-600  py-2 hover:cursor-pointer px-4 rounded text-white bg-gray-600 hover:shadow-lg">
-                    bbb
+                  <a
+                    href="u"
+                    className="py-2 hover:cursor-pointer px-4 rounded text-white bg-gray-600 hover:shadow-lg"
+                  >
+                    Dashboard
+                  </a>
+                  <h1 className="py-2 hover:cursor-pointer px-4 rounded text-white bg-gray-600 hover:shadow-lg">
+                    Sign Out
                   </h1>
                 </div>
               </div>

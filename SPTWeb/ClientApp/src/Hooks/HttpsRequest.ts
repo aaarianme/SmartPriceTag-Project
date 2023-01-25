@@ -38,7 +38,22 @@ export function useGetRequest() {
   return [loaded, res, makeRequest] as const;
 }
 
-export function PostRequest() {}
+export function usePostRequest() {
+  async function makeRequest(
+    path: string,
+    param?: any | null,
+    httpsOptions?: HttpOptions
+  ) {
+    await axios
+      .post(path, { params: param })
+      .then((Response: any) => {
+        httpsOptions?.onSuccess?.(Response);
+      })
+      .catch((err: any) => httpsOptions?.onFail?.(err.response))
+      .finally(() => httpsOptions?.finally?.());
+  }
+  return makeRequest;
+}
 
 export function PutRequest() {}
 export function DelRequest() {}
