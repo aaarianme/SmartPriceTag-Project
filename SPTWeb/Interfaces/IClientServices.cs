@@ -24,7 +24,14 @@ namespace SPTWeb.Interfaces
         /// <param name="id">Returns dto of a client or null if not found</param>
         /// <returns>null if not found</returns>
         public Task<ClientDTO?> GetClientById(int id);
+        /// <summary>
+        /// Get a client or null by username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public Task<ClientDTO?> GetClientByUsername(string username);
+        public Task<IActionResult> AddNewStore(NewStoreRequestDto store, int clientid);
+
 
 
     }

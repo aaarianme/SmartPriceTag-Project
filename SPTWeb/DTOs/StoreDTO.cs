@@ -27,7 +27,6 @@ namespace SPTWeb.DTOs
         public string Name { get; set; }
         public string Address { get; set; }
         public string CreatedOn { get; set; }
-
         public int BranchNumber { get; set; }
         public bool IsActive { get; set; }
         public string PIN { get; set; }

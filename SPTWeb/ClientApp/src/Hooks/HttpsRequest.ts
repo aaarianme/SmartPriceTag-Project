@@ -45,7 +45,7 @@ export function usePostRequest() {
     httpsOptions?: HttpOptions
   ) {
     await axios
-      .post(path, { params: param })
+      .post(path, param)
       .then((Response: any) => {
         httpsOptions?.onSuccess?.(Response);
       })

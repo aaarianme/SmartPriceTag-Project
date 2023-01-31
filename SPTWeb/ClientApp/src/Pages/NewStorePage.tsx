@@ -16,11 +16,17 @@ export default function NewStorePage() {
   const [setPopUp, removePopUp, popUp] = usePopUpManager();
   const postReq = usePostRequest();
   const [getLS, setLS, removeLS] = useLocalStorage();
-  const [state, setState] = useState<IStore>({
+  const [state, setState] = useState<{
+    name: string;
+    address: string;
+    pin: string;
+    branchNumber: string;
+  }>({
     name: "",
     address: "",
     pin: "0000",
-  } as IStore);
+    branchNumber: "",
+  });
 
   function checkInputs(): string | null {
     if (state.name == null || state.name == "")
@@ -36,9 +42,7 @@ export default function NewStorePage() {
 
   async function handleSubmit() {
     if (errors != null) return;
-    setPopUp(
-      <FullPageLoaderPopUp loadingText="Adding a new store..."></FullPageLoaderPopUp>
-    );
+    setPopUp(<FullPageLoaderPopUp loadingText="Adding a new store..." />);
     await postReq("/api/client/stores/new", state, {
       onSuccess: () => {
         setPopUp(
@@ -50,13 +54,15 @@ export default function NewStorePage() {
           />
         );
       },
-      onFail: () => {
+      onFail: (res) => {
         setPopUp(
           <ErrorPopUp
             onButtonClick={removePopUp}
             buttonText="Okay"
             header="Something went wrong"
-            message="Your new store was NOT added."
+            message={
+              res.data?.message ?? "Your new store was not added to our records"
+            }
           />
         );
       },
@@ -129,7 +135,7 @@ export default function NewStorePage() {
                         onChange={(e) =>
                           setState({
                             ...state,
-                            branchNumber: parseInt(e.target.value),
+                            branchNumber: e.target.value,
                           })
                         }
                         className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"

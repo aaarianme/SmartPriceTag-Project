@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SPTWeb.DTOs;
+using SPTWeb.Entity;
 using SPTWeb.Interfaces;
 using System.Security.Claims;
 
@@ -13,6 +15,7 @@ namespace SPTWeb.Controllers
         public ClientController(IClientServices clientServices)
         {
             this.clientServices = clientServices;
+            
         }
 
         [HttpPost]
@@ -39,10 +42,9 @@ namespace SPTWeb.Controllers
         }
 
         [HttpPost, Route("stores/new"), Authorize(policy: "client")]
-        public async Task<IActionResult> AddNewStore(StoreDTO store)
+        public async Task<IActionResult> AddNewStore(NewStoreRequestDto store)
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            return new OkObjectResult(new { stores = await clientServices.GetAllStores(userId) });
+            return await clientServices.AddNewStore(store, base.UserId);
         }
     }
 }

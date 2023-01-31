@@ -59,5 +59,19 @@ namespace SPTWeb.Services
             if (client == null) return null;
             return client.ToClientDTO();
         }
+
+        public async Task<IActionResult> AddNewStore(NewStoreRequestDto store, int clientid)
+        {
+            if (store.PIN.Length != 4) return new BadRequestObjectResult(new { message = "PIN Must be 4 digits" });
+            var existingStore = await storeRepository.GetByClientIdBranchNum(clientid, store.BranchNumber);
+            if(existingStore!=null) return new BadRequestObjectResult(new { message = $"Branch Number {store.BranchNumber} is already registered." });
+            Store newStore = store.ToStore();
+            newStore.ClientId = clientid;
+            var hashedPin = passwordHasher.HashPassword(store.PIN,out byte[] salt);
+            newStore.PIN = hashedPin;
+            newStore.Salt = passwordHasher.ConvertFromByteArrayToString(salt);
+            await storeRepository.Add(newStore);
+            return new OkResult();
+        }
     }
 }

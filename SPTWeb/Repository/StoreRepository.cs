@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MySqlX.XDevAPI;
 using SPTWeb.Entity;
 using SPTWeb.Interfaces;
 
@@ -6,15 +7,36 @@ namespace SPTWeb.Repository
 {
     public class StoreRepository : RepositoryDataAccessObject, IStoreRepository
     {
-        public Task Add(Store store)
+        public async Task Add(Store store)
         {
-            
-            throw new NotImplementedException();
+            object parameters = new { name=store.Name,date=DateTime.Now,addy=store.Address,bnum=store.BranchNumber,cid=store.ClientId,pin=store.PIN,salt=store.Salt };
+
+            var command = @"INSERT INTO `sptweb`.`stores`
+                        (
+                        `Name`,
+                        `Address`,
+                    `BranchNumber`,
+                     `CreatedOn`,
+                    `IsActive`,
+                    `ClientId`,
+                    `PIN`,
+                    `Salt`)
+                    VALUES
+                     (@name,
+                      @addy,
+                      @bnum,
+                      @date,
+                      1,
+                      @cid,
+                      @pin,
+                      @salt);
+                    ";
+            await dbConn.QueryAsync(command, parameters);
         }
 
-        public Task DeleteByClientIdBranchNum(int clientId, int branchNum)
+        public async Task DeleteByClientIdBranchNum(int clientId, int branchNum)
         {
-            throw new NotImplementedException();
+           
         }
 
         public Task DeleteById(int storeId)
@@ -28,9 +50,10 @@ namespace SPTWeb.Repository
             return await dbConn.QueryAsync<Store>("select * from stores where ClientId=@id", parameters);
         }
 
-        public Task<Store> GetByClientIdBranchNum(int clientId, int branchNum)
+        public async Task<Store?> GetByClientIdBranchNum(int clientId, int branchNum)
         {
-            throw new NotImplementedException();
+            object parameters = new { id = clientId, bid = branchNum };
+            return await dbConn.QueryFirstOrDefaultAsync<Store>("select * from stores where ClientId=@id and BranchNumber=@bid", parameters);
         }
 
         public Task<Store> GetById(int storeId)

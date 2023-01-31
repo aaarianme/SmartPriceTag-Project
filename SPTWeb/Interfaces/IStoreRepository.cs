@@ -15,14 +15,14 @@ namespace SPTWeb.Interfaces
         /// </summary>
         /// <param name="storeId"></param>
         /// <returns>Will return null if not found</returns>
-        public Task<Store> GetById(int storeId);
+        public Task<Store?> GetById(int storeId);
         /// <summary>
         /// Get a store form client id and store branch num
         /// </summary>
         /// <param name="clientId"></param>
         /// <param name="branchNum">Branch num is not the same is Store.LoginUsername</param>
         /// <returns>Null if not found</returns>
-        public Task<Store> GetByClientIdBranchNum(int clientId,int branchNum);
+        public Task<Store?> GetByClientIdBranchNum(int clientId,int branchNum);
         /// <summary>
         /// Get all stores that are linked to a clientId
         /// </summary>
