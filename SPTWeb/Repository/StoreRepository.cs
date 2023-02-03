@@ -36,12 +36,14 @@ namespace SPTWeb.Repository
 
         public async Task DeleteByClientIdBranchNum(int clientId, int branchNum)
         {
-           
+           object parameters = new { id = clientId, bid = branchNum };
+           await dbConn.QueryAsync("DELETE FROM stores WHERE ClientId=@id and BranchNum=@bid"); 
         }
 
-        public Task DeleteById(int storeId)
+        public async Task DeleteById(int storeId)
         {
-            throw new NotImplementedException();
+            object parameters = new { id=storeId };
+            await dbConn.QueryAsync("DELETE FROM stores WHERE StoreId=@id");
         }
 
         public async Task<IEnumerable<Store>> GetAll(int clientId)
@@ -70,7 +72,18 @@ namespace SPTWeb.Repository
 
         public async Task Update(Store store)
         {
-            throw new NotImplementedException();
+            //May have to remove some of these items if never changing them
+            object parameters = new { 
+                name=store.Name, 
+                adrr=store.Address,  
+                brn=store.BranchNumber,
+                created=store.CreatedOn,
+                active=store.IsActive,
+                id=store.ClientId,
+                pin=store.PIN,
+                salt=store.Salt};
+
+            await dbConn.QueryAsync("UPDATE stores SET Name=@name, Address=@adrr, BranchNum=@brn, CreatedOn=@created, IsActive=@active, ClientId=@id, PIN=@pin, Salt=@salt");
         }
     }
 }
