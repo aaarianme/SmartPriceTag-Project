@@ -13,4 +13,10 @@ export interface IClient {
   userName: string;
   pass: string;
 }
+export interface IItem {
+  clientId: string | number;
+  name: string;
+  userName: string;
+  pass: string;
+}
 //#endregion

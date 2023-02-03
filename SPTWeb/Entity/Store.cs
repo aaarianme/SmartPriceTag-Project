@@ -37,5 +37,7 @@ namespace SPTWeb.Entity
         {
             return new StoreDTO(Name,Address,BranchNumber, CreatedOn, IsActive);
         }
+
+        
     }
 }

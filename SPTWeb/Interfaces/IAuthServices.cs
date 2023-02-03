@@ -12,10 +12,18 @@ namespace SPTWeb.Interfaces
         /// </summary>
         /// <param name="clientUsername">Username</param>
         /// <param name="clientPassword">pPassword</param>
-        /// <returns>Clinet Entity If verified. null If invalid.</returns>
+        /// <returns>jwt token. null If invalid.</returns>
         public Task<string?> HandleClientLogin(string clientUsername, string clientPassword);
 
-        
+        /// <summary>
+        /// Checks user creds against the database
+        /// </summary>
+        /// <param name="clientUsername">Username</param>
+        /// <param name="clientPassword">pPassword</param>
+        /// <returns>jwt. null If invalid.</returns>
+        public Task<string?> HandleStoreLogin(string loginname, string pin);
+
+
 
 
     }

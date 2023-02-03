@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SPTWeb.DTOs;
 using SPTWeb.Entity;
+using SPTWeb.ExtensionMethods;
 using SPTWeb.Interfaces;
 using System.Security.Claims;
 
@@ -27,8 +28,7 @@ namespace SPTWeb.Controllers
         [HttpGet,Authorize(Policy = "client")]
         public async Task<IActionResult> GetClient()
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var clientDto= await clientServices.GetClientById(userId); 
+            var clientDto= await clientServices.GetClientById(User.GetUserId()); 
             if(clientDto == null) return NotFound();
             clientDto.Pass = "";
             return new OkObjectResult(new { user = clientDto });
@@ -37,14 +37,13 @@ namespace SPTWeb.Controllers
         [HttpGet,Route("stores"),Authorize(policy:"client")]
         public async Task<IActionResult> GetAllStores()
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            return  new OkObjectResult(new { stores= await clientServices.GetAllStores(userId) });
+            return  new OkObjectResult(new { stores= await clientServices.GetAllStores(User.GetUserId()) });
         }
 
         [HttpPost, Route("stores/new"), Authorize(policy: "client")]
         public async Task<IActionResult> AddNewStore(NewStoreRequestDto store)
         {
-            return await clientServices.AddNewStore(store, base.UserId);
+            return await clientServices.AddNewStore(store, User.GetUserId());
         }
     }
 }

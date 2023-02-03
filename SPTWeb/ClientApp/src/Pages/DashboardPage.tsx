@@ -96,7 +96,7 @@ export default function DashboardPage() {
                   Icon={<ArrowLeftCircleIcon className="text-white" />}
                   text="Sign Out"
                   className="bg-red-800"
-                  link="/u/items"
+                  link="/signout"
                 ></LinkCard>
               </div>
             </div>

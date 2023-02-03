@@ -22,6 +22,10 @@ import ClientDashboardOutlet from "./Pages/ClientDashboardOutlet";
 import ClientStoresPage from "./Pages/ClientStoresPage";
 import NewStorePage from "./Pages/NewStorePage";
 import SignOutPage from "./Pages/SignOutPage";
+import ProfilePage from "./Pages/ProfilePage";
+import StoreDashboardOutlet from "./Pages/StoreDashboardOutlet";
+import StoreDashboard from "./Pages/StoreDashboard";
+import StoreItemsPage from "./Pages/StoreItemsPage";
 //-------------------
 
 export default function App() {
@@ -43,11 +47,16 @@ export default function App() {
           }
         >
           <Route index element={<DashboardPage />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="stores" element={<ClientStoresPage />} />
           <Route path="stores/new" element={<NewStorePage />} />
         </Route>
-        <Route path="signout" element={<SignOutPage />} />
+        <Route path="s" element={<StoreDashboardOutlet />}>
+          <Route index element={<StoreDashboard />} />
+          <Route path="items" element={<StoreItemsPage />} />
+        </Route>
 
+        <Route path="signout" element={<SignOutPage />} />
         <Route path="*" element={<PageNotFound />} />
         <Route path="404" element={<PageNotFound />} />
         <Route path="pagenotfound" element={<PageNotFound />} />

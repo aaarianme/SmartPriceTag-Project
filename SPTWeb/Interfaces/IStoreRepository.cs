@@ -17,6 +17,12 @@ namespace SPTWeb.Interfaces
         /// <returns>Will return null if not found</returns>
         public Task<Store?> GetById(int storeId);
         /// <summary>
+        /// gets a store by login username null if not found
+        /// </summary>
+        /// <param name="loginname"></param>
+        /// <returns></returns>
+        public Task<Store?> GetByLoginName(string loginname);
+        /// <summary>
         /// Get a store form client id and store branch num
         /// </summary>
         /// <param name="clientId"></param>

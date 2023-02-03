@@ -13,11 +13,13 @@ namespace SPTWeb.Controllers
     {
         IAuthServices authServices;
         IClientServices clientServices;
+        IStoreServices storeServices;
         #region Dependecy Injection 
-        public AuthController(IAuthServices authServices,IClientServices clientServices)
+        public AuthController(IAuthServices authServices,IClientServices clientServices,IStoreServices storeServices)
         {
             this.authServices = authServices;
             this.clientServices = clientServices;
+            this.storeServices = storeServices;
         }
         #endregion
 
@@ -38,17 +40,23 @@ namespace SPTWeb.Controllers
 
         }
 
-        [HttpGet, Route("test")]
-        public async Task<IActionResult> aasa(string username, string password)
+        [HttpGet, Route("store")]
+        public async Task<IActionResult> LoginStoreRequest(string loginName, string pin)
         {
-            return new OkObjectResult(new { username = User.Identity?.Name, isauth = User.Identity?.IsAuthenticated });
+            var user = await storeServices.GetStoreByLoginName(loginName);
+            if(user == null) return new UnauthorizedResult();
+            if (!user.IsActive) return new UnauthorizedObjectResult(new {message="This Store account has been disabled by the owner."});
+            var token = await authServices.HandleStoreLogin(loginName, pin);
+            if (token == null) return new UnauthorizedResult();
+            var options = new CookieOptions();
+            options.HttpOnly = true;
+            options.IsEssential = true;
+            options.Expires = DateTimeOffset.Now.AddDays(7);
+            Response.Cookies.Append("auth", token, options);
+            return new OkObjectResult(new { store = user });
         }
 
-        [HttpGet, Route("store")]
-        public async Task<IActionResult> LoginStoreRequest(string username, string password)
-        {
-            return Ok();
-        }
+        
 
         [HttpPost, Route("signout")]
         public async Task<IActionResult> SignOutUser()

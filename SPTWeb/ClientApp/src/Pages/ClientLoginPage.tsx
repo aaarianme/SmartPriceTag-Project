@@ -49,9 +49,6 @@ export default function ClientLoginPage() {
       }
     );
   }
-  useEffect(() => {
-    console.log(loaded, result);
-  }, [loaded, result]);
 
   return (
     <div className="">
