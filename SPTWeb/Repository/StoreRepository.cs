@@ -56,9 +56,10 @@ namespace SPTWeb.Repository
             return await dbConn.QueryFirstOrDefaultAsync<Store>("select * from stores where ClientId=@id and BranchNumber=@bid", parameters);
         }
 
-        public async Task<Store> GetById(int storeId)
+        public async Task<Store?> GetById(int storeId)
         {
-            throw new NotImplementedException();
+            object parameters = new { id = storeId };
+            return await dbConn.QueryFirstOrDefaultAsync<Store>("select * from stores where StoreId = @id", parameters);
         }
 
         public async Task<Store?> GetByLoginName(string loginname)
