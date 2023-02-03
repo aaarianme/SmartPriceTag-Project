@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SPTWeb.DTOs;
-using SPTWeb.Entity;
 
 namespace SPTWeb.Interfaces
 {

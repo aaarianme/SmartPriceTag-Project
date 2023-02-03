@@ -68,7 +68,7 @@ export default function StoreItemsPage() {
       </aside>
 
       <div className="p-4 border-l-2 border-gray-200 border-dashed w-full grow dark:border-gray-700">
-        <section className="py-1 bg-blueGray-50">
+        <section className="py-1">
           <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
             {state.loaded ? (
               <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-sm border-2 rounded ">

@@ -26,6 +26,7 @@ import ProfilePage from "./Pages/ProfilePage";
 import StoreDashboardOutlet from "./Pages/StoreDashboardOutlet";
 import StoreDashboard from "./Pages/StoreDashboard";
 import StoreItemsPage from "./Pages/StoreItemsPage";
+import GetItemsFromApiPage from "./Pages/GetItemsFromApiPage";
 //-------------------
 
 export default function App() {
@@ -54,6 +55,7 @@ export default function App() {
         <Route path="s" element={<StoreDashboardOutlet />}>
           <Route index element={<StoreDashboard />} />
           <Route path="items" element={<StoreItemsPage />} />
+          <Route path="items/new/fromapi" element={<GetItemsFromApiPage />} />
         </Route>
 
         <Route path="signout" element={<SignOutPage />} />

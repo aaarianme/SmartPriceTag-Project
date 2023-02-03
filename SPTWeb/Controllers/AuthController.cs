@@ -27,6 +27,7 @@ namespace SPTWeb.Controllers
         [HttpGet, Route("client")]
         public async Task<IActionResult> LoginClientRequest(string username, string password)
         {
+            var htt = HttpContext;
             var token = await authServices.HandleClientLogin(username, password);
             if (token == null) return new UnauthorizedResult();
             var options = new CookieOptions();
@@ -35,8 +36,14 @@ namespace SPTWeb.Controllers
             options.Expires = DateTimeOffset.Now.AddDays(7);
             Response.Cookies.Append("auth", token, options);
             var user = await clientServices.GetClientByUsername(username);
-            return new OkObjectResult(new {user=user});
-            
+            return new OkObjectResult(new {
+                user= new {
+                    name = user?.Name,
+                    userName = user?.Username,
+                    clientId = user?.ClientId,
+                }
+                
+            }) ;
 
         }
 
