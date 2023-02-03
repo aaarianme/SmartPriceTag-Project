@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SampleComponent from "../Components/SampleComponent";
 import { useGetRequest } from "../Hooks/HttpsRequest";
 
 export default function SampleP() {
@@ -27,7 +28,9 @@ export default function SampleP() {
   return (
     <div className="bg-slate-400">
       <p>State 1 is :{state}</p>
+      <SampleComponent name="arian"></SampleComponent>
       <p>State 2 is :{state2}</p>
+      <SampleComponent></SampleComponent>
 
       {isLoaded == true && <div>Hi</div>}
 
