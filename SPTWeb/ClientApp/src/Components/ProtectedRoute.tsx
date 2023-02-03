@@ -14,7 +14,7 @@ export enum ProtectedRoteAcceessError {
   masterAccountOnly,
 }
 export function ProtectedRoute(props: {
-  children: ReactElement;
+  children?: ReactElement;
   accessFor: ProtectedRoteAcceessMode;
 }) {
   const [getLS, setLS, removeLS] = useLocalStorage();
