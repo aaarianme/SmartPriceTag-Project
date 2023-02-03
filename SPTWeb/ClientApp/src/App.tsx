@@ -27,12 +27,14 @@ import StoreDashboardOutlet from "./Pages/StoreDashboardOutlet";
 import StoreDashboard from "./Pages/StoreDashboard";
 import StoreItemsPage from "./Pages/StoreItemsPage";
 import GetItemsFromApiPage from "./Pages/GetItemsFromApiPage";
+import SampleP from "./Pages/SampleP";
 //-------------------
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="sample" element={<SampleP></SampleP>}></Route>
         <Route path="/" element={<HomePage />} />
         <Route path="login" element={<LoginOutlet />}>
           <Route index element={<LoginPage />} />

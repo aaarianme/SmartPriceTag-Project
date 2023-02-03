@@ -55,7 +55,7 @@ export default function ClientLoginPage() {
       <div className="bg-rose-200 h-screen overflow-hidden flex items-center justify-center">
         <div className="bg-white lg:w-5/12 md:6/12 w-10/12 shadow-3xl">
           <div className="bg-rose-200 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full p-2 md:p-8">
-            <UserCircleIcon className="text-white w-16 h-16"></UserCircleIcon>
+            <UserCircleIcon className="text-white w-16 h-16" />
           </div>
           <div className="p-12 md:p-24">
             <div className="flex items-center text-lg mb-6 md:mb-8">
