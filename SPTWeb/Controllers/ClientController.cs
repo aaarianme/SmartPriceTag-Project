@@ -25,7 +25,7 @@ namespace SPTWeb.Controllers
             return await clientServices.HandleAddClient(newClientInfo);
         }
 
-        [HttpGet,Authorize(Policy = "client")]
+        [HttpGet,Route("get"),Authorize(Policy = "client")]
         public async Task<IActionResult> GetClient()
         {
             var clientDto= await clientServices.GetClientById(User.GetUserId()); 
