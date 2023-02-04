@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import UserNavbar from "../Components/UserNavbar";
 import { IClient } from "../Helpers/Interfaces";
 import useLocalStorage from "../Hooks/useLocalStorage";
@@ -13,34 +13,64 @@ import {
 export default function ProfilePage() {
   const [getLS, setLS, removeLS] = useLocalStorage();
   const [userInfo, setUser] = useState<any>();
+  const [editInfo, setEdit] = useState<Boolean>(false);
+
   const [isLoaded, result, makeRequest] = useGetRequest();
   const [setNewPopUp, removePopUp, popUp] = usePopUpManager();
-  async function getInfo(){
-    await makeRequest("api/client/get", 
-    {}, 
-    {
-      onSuccess: displayInfo,
-      onFail: ()=>{
-        setNewPopUp(
-        <ErrorPopUp
-          header="Error Retrieving Data"
-          message="Please try again..."
-          buttonText="Ok"
-          onButtonClick={removePopUp}></ErrorPopUp>
-        );
-      }
-    });
+  async function getInfo() {
+    await makeRequest("api/client/get",
+      {},
+      {
+        onSuccess: displayInfo,
+        onFail: () => {
+          setNewPopUp(
+            <ErrorPopUp
+              header="Error Retrieving Data"
+              message="Please try again..."
+              buttonText="Ok"
+              onButtonClick={removePopUp}></ErrorPopUp>
+          );
+        }
+      });
   }
 
-  function displayInfo(result)
-  {
-    console.log(result.data);
+  function displayInfo(result) {
     setUser(result.data.user);
   }
-  
-  useEffect(()=>{
+
+  function AllowInput() {
+    console.log("AllowInput");
+    setEdit(true);
+  }
+
+  /*
+  let elem = document.getElementById(target);
+    let subbtn = document.getElementById("submitbtn");
+    elem.innerHTML = "";
+
+    let input = document.createElement('input');
+
+    input.setAttribute("type", "text");
+    input.setAttribute("value", target == 'usn' ? userInfo?.username : userInfo?.name);
+    input.style.outline = "solid black 1px";
+    input.style.paddingLeft = '8px';
+
+
+    subbtn.hidden = false;
+
+    elem.appendChild(input);*/
+
+
+  function ProcessUpdate()
+  {
+    console.log("ProcessUpdate");
+  }
+
+
+  useEffect(() => {
     getInfo();
-  }, []);
+    setEdit(false);
+  }, [userInfo?.data]);
 
   return (
     <div>
@@ -64,27 +94,39 @@ export default function ProfilePage() {
                 <div className="bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
+                    <button
+                            onClick={() => { AllowInput() }}
+                          >
+                            <svg className="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M14.5858,4.41421 C15.3668,3.63316 16.6332,3.63316 17.4142,4.41421 L17.4142,4.41421 C18.1953,5.19526 18.1953,6.46159 17.4142,7.24264 L9.13096,15.5259 L6.10051,15.7279 L6.30254,12.6975 L14.5858,4.41421 Z" /></svg>
+                          </button>
                       <label
                         htmlFor="first-name"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        UserId : {userInfo?.clientId} - Your
-                        UserId cannot be changed
+                        <span className="font-bold text-base">UserId :</span>
+                        <br></br> 
+                        {userInfo?.clientId}{editInfo == true && <p> - Your UserId cannot be changed</p>}
                       </label>
                       <br></br>
-                      <label
-                        htmlFor="username"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Username : {userInfo?.username} 
-                      </label>
-                      <button ></button>
+                      <div className="block text-sm font-medium text-gray-700">
+                        <label>
+                          <span className="font-bold text-base">Username :</span> 
+                          {editInfo == true && <input id='usn' type='text' defaultValue={userInfo?.username}></input>}
+                          {editInfo == false && <p>{userInfo?.username}</p>}
+                        </label>
+                      </div>
                       <br></br>
-                      <label
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Name : {userInfo?.name}
-                      </label>
+                      <div className="block text-sm font-medium text-gray-700">
+                        <label>
+                          <span className="font-bold text-base">Name : </span>
+                          {editInfo == true && <input id='name' type='text' defaultValue={userInfo?.name}></input>}
+                          {editInfo == false && <p>{userInfo?.name}</p>}
+                        </label>
+                      </div>
+                      <br></br>
+                      <div className="flex text-sm font-medium text-gray-700">
+                        {editInfo == true && <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" id="submitbtn" onClick={() => ProcessUpdate()}>Save Changes</button>}
+                      </div>
                     </div>
                   </div>
                 </div>
