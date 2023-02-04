@@ -3,18 +3,20 @@ import UserNavbar from "../Components/UserNavbar";
 import { IClient } from "../Helpers/Interfaces";
 import useLocalStorage from "../Hooks/useLocalStorage";
 import { useGetRequest } from "../Hooks/HttpsRequest";
+import { usePostRequest } from "../Hooks/HttpsRequest";
 import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
 import {
   PopUpTrigger,
   usePopUpManager,
   MessagePopUp,
   ErrorPopUp,
+  FullPageLoaderPopUp,
 } from "../Hooks/usePopUpManager";
 export default function ProfilePage() {
   const [getLS, setLS, removeLS] = useLocalStorage();
   const [userInfo, setUser] = useState<any>();
   const [editInfo, setEdit] = useState<Boolean>(false);
-
+  const postReq = usePostRequest();
   const [isLoaded, result, makeRequest] = useGetRequest();
   const [setNewPopUp, removePopUp, popUp] = usePopUpManager();
   async function getInfo() {
@@ -43,33 +45,23 @@ export default function ProfilePage() {
     setEdit(true);
   }
 
-  /*
-  let elem = document.getElementById(target);
-    let subbtn = document.getElementById("submitbtn");
-    elem.innerHTML = "";
-
-    let input = document.createElement('input');
-
-    input.setAttribute("type", "text");
-    input.setAttribute("value", target == 'usn' ? userInfo?.username : userInfo?.name);
-    input.style.outline = "solid black 1px";
-    input.style.paddingLeft = '8px';
-
-
-    subbtn.hidden = false;
-
-    elem.appendChild(input);*/
-
-
-  function ProcessUpdate()
+  async function ProcessUpdate()
   {
-    console.log("ProcessUpdate");
+    //Error checking?
+    var newUsn = (document.querySelector("#usn") as HTMLInputElement).value;
+    var newName = (document.querySelector("#name") as HTMLInputElement).value;
+    
+    setNewPopUp(<FullPageLoaderPopUp loadingText="Updating Information..." />);
+    //Have to add backend function
+    await postReq("")
+
+    setEdit(false);
   }
 
 
   useEffect(() => {
     getInfo();
-    setEdit(false);
+    
   }, [userInfo?.data]);
 
   return (
@@ -85,7 +77,7 @@ export default function ProfilePage() {
                   Profile
                 </h3>
                 <p className="mt-1 text-sm text-gray-600">
-                  Here's your profile.
+                  View and edit your profile.
                 </p>
               </div>
             </div>
@@ -105,13 +97,13 @@ export default function ProfilePage() {
                       >
                         <span className="font-bold text-base">UserId :</span>
                         <br></br> 
-                        {userInfo?.clientId}{editInfo == true && <p> - Your UserId cannot be changed</p>}
+                        {userInfo?.clientId}{editInfo == true && <p>Your UserId cannot be changed</p>}
                       </label>
                       <br></br>
                       <div className="block text-sm font-medium text-gray-700">
                         <label>
                           <span className="font-bold text-base">Username :</span> 
-                          {editInfo == true && <input id='usn' type='text' defaultValue={userInfo?.username}></input>}
+                          {editInfo == true && <><br></br><input className="shadow rounded text-center" id='usn' type='text' defaultValue={userInfo?.username}></input></>}
                           {editInfo == false && <p>{userInfo?.username}</p>}
                         </label>
                       </div>
@@ -119,7 +111,7 @@ export default function ProfilePage() {
                       <div className="block text-sm font-medium text-gray-700">
                         <label>
                           <span className="font-bold text-base">Name : </span>
-                          {editInfo == true && <input id='name' type='text' defaultValue={userInfo?.name}></input>}
+                          {editInfo == true && <><br></br><input className="shadow rounded text-center" id='name' type='text' defaultValue={userInfo?.name}></input></>}
                           {editInfo == false && <p>{userInfo?.name}</p>}
                         </label>
                       </div>

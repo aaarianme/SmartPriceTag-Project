@@ -45,5 +45,11 @@ namespace SPTWeb.Controllers
         {
             return await clientServices.AddNewStore(store, User.GetUserId());
         }
+
+
+        public async Task<IActionResult> UpdateClientInfo(ClientDTO clientinfo)
+        {
+            return await clientServices.UpdateClientInfo(clientinfo);
+        }
     }
 }

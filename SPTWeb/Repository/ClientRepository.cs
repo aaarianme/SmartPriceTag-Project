@@ -29,5 +29,10 @@ namespace SPTWeb.Repository
             return await dbConn.QuerySingleAsync<int>(@"INSERT INTO clients (Username, Pass, Salt, Name) VALUES (@username, @password, @salt, @name);
                                             SELECT LAST_INSERT_ID(); ", parameters);
         }
+
+        public async Task Update(ClientDTO clientInfo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

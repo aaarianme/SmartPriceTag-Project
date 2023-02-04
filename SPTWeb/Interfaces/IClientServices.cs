@@ -32,6 +32,12 @@ namespace SPTWeb.Interfaces
         public Task<IActionResult> AddNewStore(NewStoreRequestDto store, int clientid);
 
 
+        ///<summary>
+        /// Update a client by ID
+        /// </summary>
+        ///<param name="clientinfo"></param>
+        ///<returns></returns>
+        public Task<IActionResult> UpdateClientInfo(ClientDTO clientinfo);
 
     }
 }

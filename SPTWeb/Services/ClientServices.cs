@@ -73,5 +73,10 @@ namespace SPTWeb.Services
             await storeRepository.Add(newStore);
             return new OkResult();
         }
+
+        public async Task<IActionResult> UpdateClientInfo(ClientDTO clientInfo)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
