@@ -52,8 +52,23 @@ export default function ProfilePage() {
     var newName = (document.querySelector("#name") as HTMLInputElement).value;
     
     setNewPopUp(<FullPageLoaderPopUp loadingText="Updating Information..." />);
-    //Have to add backend function
-    await postReq("")
+
+    let params = {}
+    params = {username: newUsn, name: newName};
+
+    //Untested
+    await postReq("api/client/update", params, {
+      onSuccess: displayInfo,
+      onFail: () =>{
+        setNewPopUp(
+          <ErrorPopUp
+            header="Error Updating Data"
+            message="Please try again later..."
+            buttonText="Ok"
+            onButtonClick={removePopUp}></ErrorPopUp>
+        );
+      }
+    })
 
     setEdit(false);
   }
