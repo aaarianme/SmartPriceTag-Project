@@ -46,7 +46,7 @@ namespace SPTWeb.Controllers
             return await clientServices.AddNewStore(store, User.GetUserId());
         }
 
-
+        [HttpPost, Route("update"), Authorize(policy: "client")]
         public async Task<IActionResult> UpdateClientInfo(ClientDTO clientinfo)
         {
             return await clientServices.UpdateClientInfo(clientinfo);

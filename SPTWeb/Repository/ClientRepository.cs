@@ -32,7 +32,9 @@ namespace SPTWeb.Repository
 
         public async Task Update(ClientDTO clientInfo)
         {
-            throw new NotImplementedException();
+            object paramters = new { username = clientInfo.Username, name = clientInfo.Name, clientid = clientInfo.ClientId };
+
+            await dbConn.QueryAsync("Update clients SET Username = @username, Name = @name WHERE ClientId = @clientid");
         }
     }
 }
