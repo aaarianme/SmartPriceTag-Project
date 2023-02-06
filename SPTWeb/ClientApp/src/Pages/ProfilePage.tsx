@@ -47,16 +47,31 @@ export default function ProfilePage() {
 
   async function ProcessUpdate()
   {
-    //Error checking?
     var newUsn = (document.querySelector("#usn") as HTMLInputElement).value;
     var newName = (document.querySelector("#name") as HTMLInputElement).value;
+
+    //Error checking
+    if(newUsn.length < 0) setNewPopUp(
+      <ErrorPopUp
+        header="Username must be greater than 1 charcter"
+        message="Please try again..."
+        buttonText="Ok"
+        onButtonClick={removePopUp}></ErrorPopUp>
+    );
+
+    if(newName.length < 0) setNewPopUp(
+      <ErrorPopUp
+        header="Name must be greater than 1 character"
+        message="Please try again..."
+        buttonText="Ok"
+        onButtonClick={removePopUp}></ErrorPopUp>
+    );
     
     setNewPopUp(<FullPageLoaderPopUp loadingText="Updating Information..." />);
 
     let params = {}
     params = {username: newUsn, name: newName};
 
-    //Untested
     await postReq("api/client/update", params, {
       onSuccess: displayInfo,
       onFail: () =>{
