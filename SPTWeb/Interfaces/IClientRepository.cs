@@ -26,5 +26,12 @@ namespace SPTWeb.Interfaces
         /// <param name="clientInfo">Must have everything exept for id</param>
         /// <returns>The ClientId of the new client added</returns>
         public Task<int> Add(Client clientInfo);
+
+        /// <summary>
+        /// Update an existing client in the client table
+        /// </summary>
+        /// <param name="clientInfo">Contains username and name to update</param>
+        /// <returns></returns>
+        public Task Update(ClientDTO clientInfo);
     }
 }

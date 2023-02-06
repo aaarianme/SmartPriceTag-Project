@@ -76,7 +76,12 @@ namespace SPTWeb.Services
 
         public async Task<IActionResult> UpdateClientInfo(ClientDTO clientInfo)
         {
-            throw new NotImplementedException();
+            if (clientInfo.Name.Length <= 0) return new BadRequestObjectResult(new { message = "Name Must be at least 1 character" });
+            if (clientInfo.Username.Length <= 0) return new BadRequestObjectResult(new { message = "Username Must be at least 1 character" });
+
+            await clientRepository.Update(clientInfo);
+
+            return new OkResult();
         }
     }
 }

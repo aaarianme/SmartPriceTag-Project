@@ -81,9 +81,10 @@ namespace SPTWeb.Repository
                 active=store.IsActive,
                 id=store.ClientId,
                 pin=store.PIN,
-                salt=store.Salt};
+                salt=store.Salt,
+                storeid = store.StoreId};
 
-            await dbConn.QueryAsync("UPDATE stores SET Name=@name, Address=@adrr, BranchNum=@brn, CreatedOn=@created, IsActive=@active, ClientId=@id, PIN=@pin, Salt=@salt");
+            await dbConn.QueryAsync("UPDATE stores SET Name=@name, Address=@adrr, BranchNum=@brn, CreatedOn=@created, IsActive=@active, ClientId=@id, PIN=@pin, Salt=@salt WHERE StoreId = @storeid");
         }
     }
 }
