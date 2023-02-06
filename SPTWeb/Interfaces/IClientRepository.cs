@@ -32,6 +32,6 @@ namespace SPTWeb.Interfaces
         /// </summary>
         /// <param name="clientInfo">Contains username and name to update</param>
         /// <returns></returns>
-        public Task Update(ClientDTO clientInfo);
+        public Task Update(string username, string name, string clientid);
     }
 }

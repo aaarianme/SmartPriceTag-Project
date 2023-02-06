@@ -47,9 +47,9 @@ namespace SPTWeb.Controllers
         }
 
         [HttpPost, Route("update"), Authorize(policy: "client")]
-        public async Task<IActionResult> UpdateClientInfo(ClientDTO clientinfo)
+        public async Task<IActionResult> UpdateClientInfo(string username, string name, string clientid)
         {
-            return await clientServices.UpdateClientInfo(clientinfo);
+            return await clientServices.UpdateClientInfo(username, name, clientid);
         }
     }
 }

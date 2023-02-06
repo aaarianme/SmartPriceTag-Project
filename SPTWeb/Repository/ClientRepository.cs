@@ -30,11 +30,11 @@ namespace SPTWeb.Repository
                                             SELECT LAST_INSERT_ID(); ", parameters);
         }
 
-        public async Task Update(ClientDTO clientInfo)
+        public async Task Update(string username, string name, string clientid)
         {
-            object paramters = new { username = clientInfo.Username, name = clientInfo.Name, clientid = clientInfo.ClientId };
+            object parameters = new { username = username, name = name, clientid = clientid };
 
-            await dbConn.QueryAsync("Update clients SET Username = @username, Name = @name WHERE ClientId = @clientid");
+            await dbConn.QueryAsync("Update clients SET Username = @username, Name = @name WHERE ClientId = @clientid", parameters);
         }
     }
 }
