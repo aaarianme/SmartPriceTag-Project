@@ -6,7 +6,6 @@ import { useGetRequest } from "../Hooks/HttpsRequest";
 import { usePostRequest } from "../Hooks/HttpsRequest";
 import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
 import {
-  PopUpTrigger,
   usePopUpManager,
   MessagePopUp,
   ErrorPopUp,
@@ -19,6 +18,8 @@ export default function ProfilePage() {
   const postReq = usePostRequest();
   const [isLoaded, result, makeRequest] = useGetRequest();
   const [setNewPopUp, removePopUp, popUp] = usePopUpManager();
+
+
   async function getInfo() {
     await makeRequest("api/client/get",
       {},
@@ -73,7 +74,7 @@ export default function ProfilePage() {
     params = {username: newUsn, name: newName, clientid: userInfo.clientId};
       
     await postReq("api/client/update", params, {
-      onSuccess: displayInfo,
+      onSuccess: getInfo,
       onFail: () =>{
         setNewPopUp(
           <ErrorPopUp
