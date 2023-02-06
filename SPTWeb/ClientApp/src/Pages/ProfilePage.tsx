@@ -70,8 +70,8 @@ export default function ProfilePage() {
     setNewPopUp(<FullPageLoaderPopUp loadingText="Updating Information..." />);
 
     let params = {}
-    params = {username: newUsn, name: newName};
-
+    params = {username: newUsn, name: newName, clientid: userInfo.clientId};
+      
     await postReq("api/client/update", params, {
       onSuccess: displayInfo,
       onFail: () =>{
