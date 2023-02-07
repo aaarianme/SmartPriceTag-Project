@@ -74,12 +74,17 @@ namespace SPTWeb.Services
             return new OkResult();
         }
 
-        public async Task<IActionResult> UpdateClientInfo(ClientDTO clientInfo)
+        
+
+        public async Task<IActionResult> UpdateClientInfo(string username, string name, int clientid)
         {
+            // Get the user with int clientId. if not found return 404. if found change the name and username and pass the entity onto db repo
+            /*
             if (clientInfo.Name.Length <= 0) return new BadRequestObjectResult(new { message = "Name Must be at least 1 character" });
             if (clientInfo.Username.Length <= 0) return new BadRequestObjectResult(new { message = "Username Must be at least 1 character" });
 
             await clientRepository.Update(clientInfo);
+            */
 
             return new OkResult();
         }

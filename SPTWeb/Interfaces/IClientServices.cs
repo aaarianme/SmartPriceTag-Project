@@ -37,7 +37,7 @@ namespace SPTWeb.Interfaces
         /// </summary>
         ///<param name="clientinfo"></param>
         ///<returns></returns>
-        public Task<IActionResult> UpdateClientInfo(string username, string name, string clientid);
+        public Task<IActionResult> UpdateClientInfo(string username, string name, int clientid);
 
     }
 }

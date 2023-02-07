@@ -47,9 +47,15 @@ namespace SPTWeb.Controllers
         }
 
         [HttpPost, Route("update"), Authorize(policy: "client")]
-        public async Task<IActionResult> UpdateClientInfo(string username, string name, string clientid)
+        public async Task<IActionResult> UpdateClientInfo(string username, string name)
         {
-            return await clientServices.UpdateClientInfo(username, name, clientid);
+            /*
+             Authorize makes sure that only a verified clien can get in this method so they are already verified
+             to access the client Id u can use the below code anytime
+            
+             */
+            int clientId = User.GetUserId();
+            return await clientServices.UpdateClientInfo(username, name, clientId);
         }
     }
 }
