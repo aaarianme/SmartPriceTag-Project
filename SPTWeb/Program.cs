@@ -62,11 +62,19 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
-app.UseCors(op=>op.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(a=>true));
+//app.UseCors(op=>op.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(a=>true).WithOrigins(""));
+app.UseCors(builder => builder
+       .AllowAnyHeader()
+       .AllowAnyMethod()
+       .WithOrigins("https://sptwebapp.azurewebsites.net", "https://localhost:44412").AllowCredentials()
+    ) ;
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
+app.MapFallbackToFile("index.html"); ;
+app.UseDeveloperExceptionPage();
+
 
 
 app.Run();

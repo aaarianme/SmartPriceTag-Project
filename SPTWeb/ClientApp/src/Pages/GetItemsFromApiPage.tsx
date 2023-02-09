@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StoreNav from "../Components/StoreNav";
 import useLocalStorage from "../Hooks/useLocalStorage";
-import { usePostRequest } from "../Hooks/HttpsRequest";
+import { useGetRequest, usePostRequest } from "../Hooks/HttpsRequest";
 import { usePopUpManager, PopUpTrigger } from "../Hooks/usePopUpManager";
 export default function GetItemsFromApiPage() {
   const [setPopUp, removePopUp, popUp] = usePopUpManager();
   const [getLS, setLS, removeLS] = useLocalStorage();
+  const [loaded, res, makeRequest] = useGetRequest();
+  async function getIP() {
+    await makeRequest(
+      "api/store/ip",
+      {},
+      {
+        onSuccess: (res) => {
+          setState(res);
+          console.log(res);
+        },
+      }
+    );
+  }
+  useEffect(() => {
+    getIP();
+  }, []);
+  const [state, setState] = useState();
   return (
     <>
       <StoreNav />
@@ -17,6 +34,9 @@ export default function GetItemsFromApiPage() {
                 <div className="">
                   <h3 className="text-lg font-medium leading-6 text-gray-900">
                     Get Items From Your API
+                  </h3>
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">
+                    Your Ip address is
                   </h3>
                   <p className="mt-1 text-sm text-gray-600">
                     Your API Needs to match the json structure below.

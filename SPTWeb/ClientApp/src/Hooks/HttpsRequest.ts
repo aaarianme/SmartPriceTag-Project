@@ -1,7 +1,13 @@
 import { useState } from "react";
 import axios, { AxiosPromise } from "axios";
+axios.defaults.withCredentials = true;
 
-axios.defaults.baseURL = "https://localhost:5000/";
+var isDev = false;
+if (isDev) {
+  axios.defaults.baseURL = "https://localhost:5000";
+} else {
+  axios.defaults.baseURL = "https://sptwebapp.azurewebsites.net/";
+}
 axios.defaults.withCredentials = true;
 interface HttpOptions {
   onSuccess?: Function;
