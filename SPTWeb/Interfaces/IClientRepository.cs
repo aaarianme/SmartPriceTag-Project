@@ -30,7 +30,9 @@ namespace SPTWeb.Interfaces
         /// <summary>
         /// Update an existing client in the client table
         /// </summary>
-        /// <param name="clientInfo">Contains username and name to update</param>
+        /// <param name="username">new username</param>
+        /// <param name="name">new name</param>
+        /// <param name="clientid">new clientid</param>
         /// <returns></returns>
         public Task Update(string username, string name, string clientid);
     }
