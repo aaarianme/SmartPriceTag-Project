@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios, { AxiosPromise } from "axios";
 axios.defaults.withCredentials = true;
 
-var isDev = false;
+var isDev = true;
 if (isDev) {
   axios.defaults.baseURL = "https://localhost:5000";
 } else {

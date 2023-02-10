@@ -27,6 +27,7 @@ import StoreDashboardOutlet from "./Pages/StoreDashboardOutlet";
 import StoreDashboard from "./Pages/StoreDashboard";
 import StoreItemsPage from "./Pages/StoreItemsPage";
 import GetItemsFromApiPage from "./Pages/GetItemsFromApiPage";
+import NewItemPage from "./Pages/NewItemPage";
 import SampleP from "./Pages/SampleP";
 //-------------------
 
@@ -54,9 +55,17 @@ export default function App() {
           <Route path="stores" element={<ClientStoresPage />} />
           <Route path="stores/new" element={<NewStorePage />} />
         </Route>
-        <Route path="s" element={<StoreDashboardOutlet />}>
+        <Route
+          path="s"
+          element={
+            <ProtectedRoute accessFor={ProtectedRoteAcceessMode.storeOnly}>
+              <StoreDashboardOutlet />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<StoreDashboard />} />
           <Route path="items" element={<StoreItemsPage />} />
+          <Route path="items/new" element={<NewItemPage />} />
           <Route path="items/new/fromapi" element={<GetItemsFromApiPage />} />
         </Route>
 
