@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text;
 using SPTWeb.Enum;
 using static SPTWeb.Enum.AppEnums;
 
@@ -17,6 +18,19 @@ namespace SPTWeb.ExtensionMethods
             var role = principal.FindFirstValue(ClaimTypes.Role);
             if (role == "store") return UserRole.store;
             return UserRole.client;
+        }
+
+        public static string ConvertToBase64(this Stream stream)
+        {
+            byte[] bytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                stream.CopyTo(memoryStream);
+                bytes = memoryStream.ToArray();
+            }
+
+            string base64 = Convert.ToBase64String(bytes);
+            return base64;
         }
     }
 }

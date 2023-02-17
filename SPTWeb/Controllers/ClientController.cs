@@ -65,5 +65,11 @@ namespace SPTWeb.Controllers
            
             return new OkObjectResult(new { localIp=HttpContext.Connection.LocalIpAddress.Address, localPort = HttpContext.Connection.LocalPort, id = HttpContext.Connection.Id, remotePort = HttpContext.Connection.RemotePort, remoteIp_address = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), addressFamilt = HttpContext.Connection.RemoteIpAddress?.AddressFamily });
         }
+        [HttpPost, Route("sample2")]
+        public async Task<IActionResult> aaaa()
+        {
+            var name = Request.Form.Files;
+            return new OkObjectResult(new { localIp = HttpContext.Connection.LocalIpAddress.Address, localPort = HttpContext.Connection.LocalPort, id = HttpContext.Connection.Id, remotePort = HttpContext.Connection.RemotePort, remoteIp_address = HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString(), addressFamilt = HttpContext.Connection.RemoteIpAddress?.AddressFamily });
+        }
     }
 }

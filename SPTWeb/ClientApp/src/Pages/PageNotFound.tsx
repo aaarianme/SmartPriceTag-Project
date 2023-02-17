@@ -1,11 +1,14 @@
 import React from "react";
 
-export default function PageNotFound() {
+export default function PageNotFound(props: { error?: string }) {
   return (
     <div className="flex bg-red-500 h-screen">
       <div className="m-auto pb-60">
-        <h1 className="text-black text-6xl font-thin">404 - Such Empty :(</h1>
+        <h1 className="text-black text-6xl font-thin">
+          404 - {props.error ? props.error : "Such Empty :("}
+        </h1>
         <h2 className="text-xl mt-2 text-red-900">Here's why this happens:</h2>
+
         <label className="pl-2 block text-red-900">
           -You are not authorized to view this resource.
         </label>

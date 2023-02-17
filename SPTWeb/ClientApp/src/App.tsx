@@ -29,6 +29,7 @@ import StoreItemsPage from "./Pages/StoreItemsPage";
 import GetItemsFromApiPage from "./Pages/GetItemsFromApiPage";
 import NewItemPage from "./Pages/NewItemPage";
 import SampleP from "./Pages/SampleP";
+import ItemViewPage from "./Pages/ItemViewPage";
 //-------------------
 
 export default function App() {
@@ -65,6 +66,7 @@ export default function App() {
         >
           <Route index element={<StoreDashboard />} />
           <Route path="items" element={<StoreItemsPage />} />
+          <Route path="items/:itemId" element={<ItemViewPage />} />
           <Route path="items/new" element={<NewItemPage />} />
           <Route path="items/new/fromapi" element={<GetItemsFromApiPage />} />
         </Route>

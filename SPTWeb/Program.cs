@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using SPTWeb.Authentications;
+using SPTWeb.AzureStorage;
 using SPTWeb.Interfaces;
 using SPTWeb.Repository;
 using SPTWeb.Services;
@@ -47,6 +48,11 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientServices, ClientServices>();
 builder.Services.AddScoped<IStoreServices, StoreServices>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IAzureStorageManager, AzureStorageManager>();
+builder.Services.AddScoped<IItemsSerivces, ItemsServices>();
+builder.Services.AddScoped<IItemsRepository, ItemsRepository>();
+builder.Services.AddScoped<IItemsImagesRepository, ItemImagesRepository>();
+
 #endregion
 
 var app = builder.Build();

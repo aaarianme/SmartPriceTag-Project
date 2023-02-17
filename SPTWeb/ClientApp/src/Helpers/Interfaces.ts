@@ -14,9 +14,15 @@ export interface IClient {
   pass: string;
 }
 export interface IItem {
-  clientId: string | number;
+  itemID: number;
   name: string;
-  userName: string;
-  pass: string;
+  weight: number;
+  netWeight: number;
+  productDesc: string;
+  internalID: string;
+  storeId: number;
+}
+export interface IFullItemDetails {
+  item: IItem;
 }
 //#endregion

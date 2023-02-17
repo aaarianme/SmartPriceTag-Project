@@ -1,19 +1,101 @@
-import React, { useState } from "react";
-import StoreNav from "../Components/StoreNav";
+import React, { useEffect, useState } from "react";
 import {
   ClipboardDocumentCheckIcon,
   PlusIcon,
   PaperAirplaneIcon,
+  ArrowTopRightOnSquareIcon,
 } from "@heroicons/react/24/solid";
 import LoaderAnimator from "../Components/LoaderAnimator";
+import { useReducer } from "react";
+import { useGetRequest } from "../Hooks/HttpsRequest";
+import { IItem, IFullItemDetails } from "../Helpers/Interfaces";
+import useLocalStorage from "../Hooks/useLocalStorage";
 
 interface IPageState {
   loaded: boolean;
-  items?: any;
+  items?: Array<IItem>;
+  lastDataUpdate: Date;
+}
+enum ActionKind {
+  setAllItems,
+  setItemsLoaded,
+  setLastDataUpdate,
+}
+interface IAction {
+  action: ActionKind;
+  payload: any;
+}
+function reducer(state: IPageState, action: IAction): IPageState {
+  const { payload } = action;
+  switch (action.action) {
+    case ActionKind.setItemsLoaded:
+      return { ...state, loaded: payload };
+    case ActionKind.setAllItems:
+      return { ...state, items: payload };
+    case ActionKind.setLastDataUpdate:
+      return { ...state, lastDataUpdate: payload };
+    default:
+      return state;
+  }
 }
 export default function StoreItemsPage() {
-  const [state, setState] = useState<IPageState>({ loaded: true });
+  const [state, dispatch] = useReducer(reducer, {
+    loaded: false,
+  } as IPageState);
+  const [loaded, res, makeGetRequest] = useGetRequest();
+  const [getLS, setLS, removeLS] = useLocalStorage();
+  async function getAllItems() {
+    dispatch({ action: ActionKind.setItemsLoaded, payload: false });
+    await makeGetRequest("/api/items", null, {
+      onSuccess: (res) => {
+        var options = {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        } as const;
+        let dateNow = new Date().toLocaleDateString("en-US", options);
+        setLS("storeItemDetails", {
+          items: res.data.items,
+          lastUpdate: dateNow,
+        });
+        dispatch({
+          action: ActionKind.setLastDataUpdate,
+          payload: dateNow,
+        });
+        dispatch({ action: ActionKind.setAllItems, payload: res.data.items });
+        dispatch({ action: ActionKind.setItemsLoaded, payload: true });
+      },
+    });
+  }
+  useEffect(() => {
+    var lsData = getLS<{ items: IItem; lastUpdate: Date }>("storeItemDetails");
+    console.log(lsData);
+    if (lsData == undefined) getAllItems();
+    else {
+      dispatch({
+        action: ActionKind.setLastDataUpdate,
+        payload: lsData.lastUpdate,
+      });
+      dispatch({ action: ActionKind.setAllItems, payload: lsData.items });
+      dispatch({ action: ActionKind.setItemsLoaded, payload: true });
+    }
+  }, []);
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
+  let allItemDetails: Array<IFullItemDetails> = GenerateFullItemDetails();
+  function GenerateFullItemDetails(): Array<IFullItemDetails> {
+    if (state.items == undefined) return;
+    let newArr: Array<IFullItemDetails> = [];
+    state.items.forEach((item) => {
+      newArr.push({ item: item });
+    });
+    return newArr;
+  }
   return (
     <div className="flex flex-row">
       <aside className="sticky inline-block text-zinc-50 top-0 left-0 z-40 h-auto p-3">
@@ -33,7 +115,7 @@ export default function StoreItemsPage() {
                     Items Count
                   </span>
                   <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-zinc-800 bg-blue-100 rounded-full">
-                    3
+                    {allItemDetails?.length}
                   </span>
                 </p>
               </li>
@@ -60,16 +142,40 @@ export default function StoreItemsPage() {
                 </a>
               </li>
             </ul>
-            <div className="bg-orange-100 text-orange-800 rounded-md mt-2 p-2 text-sm font-thin">
-              <p>- Pinned Items</p>
-            </div>
+            {state.loaded && state.lastDataUpdate != null && (
+              <div className="bg-orange-100 text-orange-800 rounded-md mt-2 p-2 text-xs font-thin">
+                {Math.ceil(
+                  Math.abs(
+                    new Date().getDate() -
+                      new Date(state.lastDataUpdate).getDate()
+                  ) /
+                    (1000 * 60 * 60 * 24)
+                ) >= 2 ? (
+                  <p>
+                    WARNING: Your data is{" "}
+                    {Math.ceil(
+                      Math.abs(
+                        new Date().getDate() -
+                          new Date(state.lastDataUpdate).getDate()
+                      ) /
+                        (1000 * 60 * 60 * 24)
+                    )}{" "}
+                    days old. To update, click on Last Update
+                  </p>
+                ) : (
+                  <p>
+                    Your data is fairly recent. To update, click on Last Update
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </aside>
 
       <div className="p-4 border-l-2 border-gray-200 border-dashed w-full grow dark:border-gray-700">
         <section className="py-1">
-          <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
+          <div className="w-full  mb-12  px-4">
             {state.loaded ? (
               <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-sm border-2 rounded ">
                 <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -81,10 +187,13 @@ export default function StoreItemsPage() {
                     </div>
                     <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
                       <button
-                        className="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                        className="bg-orange-500 text-white text-xs cursor-pointer font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
+                        onClick={() => {
+                          getAllItems();
+                        }}
                       >
-                        See all
+                        Last Update: {state.lastDataUpdate}
                       </button>
                     </div>
                   </div>
@@ -119,21 +228,37 @@ export default function StoreItemsPage() {
                     </thead>
 
                     <tbody>
-                      <tr className="border-b">
-                        <th className="px-6 align-middle text-xs whitespace-nowrap p-4 text-left  ">
-                          /argon/
-                        </th>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
-                          4,569
-                        </td>
-                        <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          340
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <i className="fas fa-arrow-up text-emerald-500 mr-4"></i>
-                          46,53%
-                        </td>
-                      </tr>
+                      {allItemDetails.length >= 1 ? (
+                        allItemDetails.map((detail) => (
+                          <tr className="border-b">
+                            <th className="px-6 align-middle text-xs whitespace-nowrap p-4 text-left  ">
+                              {detail.item.itemID}
+                            </th>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 ">
+                              {detail.item.name}
+                            </td>
+                            <td className="border-t-0 px-6 align-center border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              {detail.item.weight}KG
+                            </td>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              {detail.item.netWeight}KG
+                            </td>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              {detail.item.internalID}
+                            </td>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              <a
+                                className="text-blue-400 font-thin w-full"
+                                href={"/s/items/" + detail.item.itemID}
+                              >
+                                <ArrowTopRightOnSquareIcon className="w-5 h-5" />
+                              </a>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <div>hi</div>
+                      )}
                     </tbody>
                   </table>
                 </div>
