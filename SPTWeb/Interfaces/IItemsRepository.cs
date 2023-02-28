@@ -9,6 +9,7 @@ namespace SPTWeb.Interfaces
         public Task<Item?> GetByInternalIdStoreId(int internalID,int storeId);
         public Task<List<Item>> GetAllStoreItems(int storeid);
         public Task<List<Item>> GetAllClientItems(int clientId);
+        public Task Delete(int id);
 
     }
 }

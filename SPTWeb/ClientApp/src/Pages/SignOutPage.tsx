@@ -17,6 +17,7 @@ export default function SignOutPage() {
         onSuccess: () => {
           RemoveLs("userType");
           RemoveLs("userInfo");
+          RemoveLs("storeItemDetails");
           RemoveLs("store");
           setState(true);
           navigate("/");

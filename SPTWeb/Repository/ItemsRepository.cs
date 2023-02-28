@@ -30,6 +30,12 @@ namespace SPTWeb.Repository
 
         }
 
+        public async Task Delete(int id)
+        {
+            object parameters = new { id = id };
+            await dbConn.QueryAsync("delete FROM sptweb.items where ItemID = @id;", parameters);
+        }
+
         public async Task<List<Item>> GetAllClientItems(int clientId)
         {
             throw new NotImplementedException();
@@ -47,6 +53,8 @@ namespace SPTWeb.Repository
             object parameters = new { id = itemId };
             return await dbConn.QueryFirstOrDefaultAsync<Item>("SELECT* FROM sptweb.items where ItemID = @id;", parameters);
         }
+
+
 
         public async Task<Item?> GetByInternalIdStoreId(int internalID, int storeId)
         {

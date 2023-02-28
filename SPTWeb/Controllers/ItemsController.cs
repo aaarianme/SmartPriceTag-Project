@@ -48,11 +48,25 @@ namespace SPTWeb.Controllers
             return Ok();
         }
 
+        [HttpDelete, Route("{id}"), Authorize]
+        public async Task<IActionResult> DeleteItem(int id)
+        {
+            var item=await itemsSerivces.GetItem(id);
+            if (item.item == null) return NotFound();
+            var storeId = User.GetUserId();
+            if (item.item.StoreId != storeId) return Unauthorized();
+            await itemsSerivces.DeleteItem(id);
+            return Ok();
+        }
+
+
         [HttpPost, Authorize]
         public async Task<IActionResult> AddItem([FromForm]IFormCollection files, [FromForm] string jsondata)
         {
             ItemAddNewRequestDTO myObj = JsonConvert.DeserializeObject<ItemAddNewRequestDTO>(jsondata);
-            myObj.Images = files;
+            if(myObj == null) return new BadRequestObjectResult(new {message="Item info must be provided."});
+            if(files!=null)
+                myObj.Images = files;
             var storeId = User.GetUserId();
             return await itemsSerivces.AddItem(myObj, storeId);
         }

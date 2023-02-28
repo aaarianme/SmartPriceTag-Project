@@ -2,238 +2,254 @@ import { ArrowUpOnSquareIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FullPageLoadingAnimator from "../Components/FullPageLoadingAnimator";
+import LoaderAnimator from "../Components/LoaderAnimator";
+import LoadingAnimatorSmall from "../Components/loadingAnimatorSmall";
 import StoreNav from "../Components/StoreNav";
-import { IItem } from "../Helpers/Interfaces";
+import { ICampaign, IFullItemDetails, IItem } from "../Helpers/Interfaces";
 import { useGetRequest } from "../Hooks/HttpsRequest";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/solid";
+import useLocalStorage from "../Hooks/useLocalStorage";
+import {
+  ErrorPopUp,
+  PopUpTrigger,
+  usePopUpManager,
+} from "../Hooks/usePopUpManager";
 import PageNotFound from "./PageNotFound";
 interface IPageState {
-  loaded: boolean;
-  itemDetails: { item: IItem; images: Array<string> };
+  itemsLoaded: boolean;
+  itemDetails: IFullItemDetails;
   currentImageIndex: number;
+  pageError: boolean;
+  campaigns: Array<ICampaign>;
+  campaignsLoaded: boolean;
 }
 export default function ItemViewPage() {
   const { itemId } = useParams();
+  const [getLS, setLS, removeLS] = useLocalStorage();
   const [state, setState] = useState<IPageState>({
-    loaded: false,
+    itemsLoaded: false,
     itemDetails: null,
     currentImageIndex: 0,
+    pageError: false,
+    campaigns: null,
+    campaignsLoaded: false,
   });
+  const [setPopUp, removePopUp, popUp] = usePopUpManager();
   const [loaded, res, makeGetRequest] = useGetRequest();
   async function pageSetUp() {
     if (isNaN(itemId as any)) return;
     let id = parseInt(itemId);
+    let allSavedItems = getLS<Array<IFullItemDetails>>("fullStoreInfo");
+    console.log("allSaved", allSavedItems);
     await makeGetRequest(
       "/api/items/" + id,
       {},
       {
         onSuccess: (res) => {
           let { item } = res.data;
-          setState({ ...state, itemDetails: item, loaded: true });
+          setState({ ...state, itemDetails: item });
         },
-        onFail: () => {},
+        onFail: () => {
+          setState((pre) => ({ ...pre, pageError: true }));
+        },
+        finally: () => {
+          setState((pre) => ({ ...pre, itemsLoaded: true }));
+        },
+      }
+    );
+    await makeGetRequest(
+      "/api/campaigns/item/" + id,
+      {},
+      {
+        onSuccess: (res) => {
+          let { campaigns } = res.data;
+          setState((pre) => ({ ...pre, campaigns: campaigns }));
+        },
+        onFail: (res) => {
+          setPopUp(
+            <ErrorPopUp
+              header="Failed loading data"
+              message="Campaigns were not loaded."
+              onButtonClick={removePopUp}
+              buttonText="Okay"
+              retry={{
+                canRetry: true,
+                retryFunction: () => {},
+                retryButtonText: "Try Again",
+              }}
+            />
+          );
+        },
+        finally: () => {
+          setState((pre) => ({ ...pre, campaignsLoaded: true }));
+        },
       }
     );
   }
   useEffect(() => {
-    console.log(state);
+    console.log("state is", state);
   }, [state]);
   useEffect(() => {
     pageSetUp();
   }, []);
   if (isNaN(itemId as any))
     return <PageNotFound error="Item not found"></PageNotFound>;
-  if (!state.loaded)
+  if (!state.itemsLoaded)
     return (
       <FullPageLoadingAnimator
-        show={!state.loaded}
+        show={!state.itemsLoaded}
         text={"Loading Item #" + itemId}
       ></FullPageLoadingAnimator>
     );
+  if (state.pageError)
+    return <PageNotFound error="Item not found"></PageNotFound>;
   return (
     state.itemDetails.item && (
       <>
         <StoreNav></StoreNav>
         <div className="p-10">
-          <p className="text-slate-700 mb-2 ">
-            <span className="font-bold">
-              {state.itemDetails.item.name} #{state.itemDetails.item.internalID}
-            </span>{" "}
-          </p>
-          <p className="text-slate-700 mb-5 ">
-            Description:
-            <span className=""> {state.itemDetails.item.productDesc}</span>{" "}
-          </p>
-          <div className="block w-full overflow-x-auto px-10 text-center">
-            <table className="items-center bg-transparent w-full border-collapse text-center text-lg ">
-              <thead>
-                <tr>
-                  <th className="px-6  text-center align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold">
-                    ItemID
-                  </th>
-                  <th className="px-6  align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold ">
-                    Name
-                  </th>
-                  <th className="px-6   align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold ">
-                    Weight
-                  </th>
-                  <th className="px-6  align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold ">
-                    Net Weight
-                  </th>
-                  <th className="px-6  align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold ">
-                    Internal ID
-                  </th>
-                  <th className="px-6  align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold ">
-                    Actions
-                  </th>
-                  <th className="px-6  align-middle border border-solid  py-3  border-l-0 border-r-0 whitespace-nowrap font-semibold ">
-                    Tag
-                  </th>
-                </tr>
-              </thead>
+          {state.itemDetails.item.productDesc && (
+            <p className="text-slate-700 mb-5 ">
+              Description:
+              <span className="">{state.itemDetails.item.productDesc}</span>
+            </p>
+          )}
+          <section className="bg-white dark:bg-gray-900">
+            <div className="container px-6 py-10 mx-auto">
+              <div className="lg:flex lg:items-center">
+                <div className="w-full space-y-4 lg:w-1/2 ">
+                  <div>
+                    <h1 className="text-3xl font-thin text-zinc-800 capitalize lg:text-4xl">
+                      {`${state.itemDetails.item.name}  #${state.itemDetails.item.internalID}`}
+                    </h1>
+                  </div>
 
-              <tbody>
-                <tr className="border-b">
-                  <th className="px-6 align-middle  whitespace-nowrap p-4   ">
-                    {state.itemDetails.item.itemID}
-                  </th>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4 ">
-                    {state.itemDetails.item.name}
-                  </td>
-                  <td className="border-t-0 px-6 align-center border-l-0 border-r-0  whitespace-nowrap p-4">
-                    {state.itemDetails.item.weight}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
-                    {state.itemDetails.item.netWeight}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
-                    {state.itemDetails.item.internalID}
-                  </td>
-                  <td className="border-t-0 px-6 align-middle border-l-0 border-r-0  whitespace-nowrap p-4">
-                    <a className="text-blue-400 font-thin w-full">
-                      {state.itemDetails.item.itemID}
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="px-40">
-            <div
-              id="default-carousel"
-              className="relative"
-              data-carousel="static"
-            >
-              <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-                <div>
+                  <div className="md:flex md:items-start md:-mx-4">
+                    <div className="md:mx-4 md:mt-0 border rounded">
+                      <p className="text-zinc-800 p-2">
+                        {`Weight: ${state.itemDetails.item.weight} KG - Net Weight ${state.itemDetails.item.netWeight} KG`}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-zinc-600 p-2 text-xs">
+                    {state.itemDetails.images.length} Image(s) available
+                  </p>
+                  {state.itemDetails.item.productDesc && (
+                    <div className="md:flex md:items-start md:-mx-4">
+                      <div className="mt-4 md:mx-4 md:mt-0">
+                        <h1 className="text-2xl font-semibold text-gray-700 capitalize">
+                          Description
+                        </h1>
+                        <p className="text-zinc-800 p-2">
+                          state.itemDetails.item.productDesc
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="md:flex md:items-start md:-mx-4">
+                    <div className="mt-4 md:mx-4 md:mt-0">
+                      <h1 className="text-2xl font-semibold text-gray-700 capitalize">
+                        Campaigns
+                      </h1>
+                      {!state.campaignsLoaded ? (
+                        <div>
+                          <LoadingAnimatorSmall></LoadingAnimatorSmall>
+                        </div>
+                      ) : state.campaigns?.length == 0 ? (
+                        <a href="/s/tags">
+                          - Go to Tag Manager to add a campaign
+                        </a>
+                      ) : (
+                        <div className="pl-2 pt-2">
+                          <ul className="space-y-1 text-gray-500 list-inside">
+                            {state.campaigns.map((x, i) => (
+                              <li className="flex items-center">
+                                {x.isActive && (
+                                  <svg
+                                    className="w-4 h-4 mr-1.5 text-green-500 flex-shrink-0"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      fill-rule="evenodd"
+                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                      clip-rule="evenodd"
+                                    ></path>
+                                  </svg>
+                                )}
+                                {x.startDate == null && x.endDate == null ? (
+                                  <label>{x.isPrice}$ as defualt</label>
+                                ) : (
+                                  <label>
+                                    {x.wasPrice && (
+                                      <span className="text-yellow-500">
+                                        <s>{x.wasPrice}$</s>
+                                      </span>
+                                    )}
+                                    <span className="text-zinc-600">
+                                      {" "}
+                                      {x.isPrice}${" "}
+                                    </span>
+                                    {new Date(x.endDate).toDateString()} to{" "}
+                                    {new Date(x.endDate).toDateString()}
+                                  </label>
+                                )}
+                                <a
+                                  className="px-1"
+                                  href={"/s/campaign/" + x.campaignId}
+                                >
+                                  <ArrowTopRightOnSquareIcon className="w-4" />
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="hidden lg:flex lg:items-center lg:w-1/2 lg:justify-center">
                   {state.itemDetails.images.length == 0 ? (
-                    <div className="absolute block w-80 h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 text-center">
-                      <label className="p-10 rounded-xl bg-blue-500 text-white">
-                        Upload Images
-                        <ArrowUpOnSquareIcon className="w-20 h-auto" />
-                      </label>
+                    <div className="flex flex-col justify-center w-[28rem] h-[28rem] object-cover xl:w-[34rem] xl:h-[34rem] py-3">
+                      <span className="block text-center text-zinc-400">
+                        No images found
+                      </span>
                     </div>
                   ) : (
                     <img
+                      className="w-[28rem] h-[28rem] object-cover xl:w-[34rem] xl:h-[34rem] rounded-sm py-3 cursor-pointer"
                       src={
-                        "data:image/png;base64," +
+                        "data:image/jpeg;base64," +
                         state.itemDetails.images[state.currentImageIndex]
                       }
-                      className="absolute block w-80 h-auto -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                      alt=""
+                      onClick={() => {
+                        if (
+                          state.currentImageIndex ==
+                          state.itemDetails.images.length - 1
+                        )
+                          setState((pre) => ({ ...pre, currentImageIndex: 0 }));
+                        else
+                          setState((pre) => ({
+                            ...pre,
+                            currentImageIndex: pre.currentImageIndex + 1,
+                          }));
+                      }}
                     />
                   )}
                 </div>
               </div>
-              <div className="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2">
-                <button
-                  type="button"
-                  className="w-3 h-3 rounded-full"
-                  aria-current="false"
-                  aria-label="Slide 1"
-                  data-carousel-slide-to="0"
-                ></button>
-                <button
-                  type="button"
-                  className="w-3 h-3 rounded-full"
-                  aria-current="false"
-                  aria-label="Slide 2"
-                  data-carousel-slide-to="1"
-                ></button>
-                <button
-                  type="button"
-                  className="w-3 h-3 rounded-full"
-                  aria-current="false"
-                  aria-label="Slide 3"
-                  data-carousel-slide-to="2"
-                ></button>
-              </div>
-              <button
-                type="button"
-                className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                onClick={() => {
-                  if (state.currentImageIndex - 1 >= 0) {
-                    setState((pre) => ({
-                      ...pre,
-                      currentImageIndex: pre.currentImageIndex - 1,
-                    }));
-                  }
-                }}
-              >
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 19l-7-7 7-7"
-                    ></path>
-                  </svg>
-                  <span className="sr-only">Previous</span>
-                </span>
-              </button>
-              <button
-                type="button"
-                className="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                onClick={() => {
-                  if (
-                    state.currentImageIndex + 1 <
-                    state.itemDetails.images.length
-                  ) {
-                    setState((pre) => ({
-                      ...pre,
-                      currentImageIndex: pre.currentImageIndex + 1,
-                    }));
-                  }
-                }}
-              >
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-full sm:w-10 sm:h-10 bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    ></path>
-                  </svg>
-                  <span className="sr-only">Next</span>
-                </span>
-              </button>
+
+              <hr className="border-gray-200 my-12 dark:border-gray-700" />
+
+              <div className="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5"></div>
             </div>
-          </div>
+          </section>
         </div>
+        <PopUpTrigger popUp={popUp}></PopUpTrigger>
       </>
     )
   );

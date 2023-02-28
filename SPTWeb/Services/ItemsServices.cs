@@ -51,6 +51,11 @@ namespace SPTWeb.Services
             return new OkObjectResult(new { itemId=newId});
         }
 
+        public async Task DeleteItem(int itemId)
+        {
+            await itemsRepository.Delete(itemId);
+        }
+
         public async Task<List<Item>> GetAllStoreItems(int storeId)
         {
             var items = await itemsRepository.GetAllStoreItems(storeId);

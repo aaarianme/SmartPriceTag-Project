@@ -158,7 +158,7 @@ export default function NewStorePage() {
                               setState({ ...state, pin: e.target.value })
                             }
                           />
-                          {errors == null ? (
+                          {!errors ? (
                             <div className="w-100 border-l-2 border-l-blue-600 bg-blue-50 rounded px-2">
                               <label>
                                 Store Login Name:{" "}

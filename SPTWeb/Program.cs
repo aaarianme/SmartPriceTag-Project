@@ -52,7 +52,8 @@ builder.Services.AddScoped<IAzureStorageManager, AzureStorageManager>();
 builder.Services.AddScoped<IItemsSerivces, ItemsServices>();
 builder.Services.AddScoped<IItemsRepository, ItemsRepository>();
 builder.Services.AddScoped<IItemsImagesRepository, ItemImagesRepository>();
-
+builder.Services.AddScoped<ICampaignRepository, CampaignRepository>();
+builder.Services.AddScoped<ICampaignsServices, CampaignsServices>();
 #endregion
 
 var app = builder.Build();

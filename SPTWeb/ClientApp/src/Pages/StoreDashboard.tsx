@@ -35,9 +35,9 @@ export default function StoreDashboard() {
               <div className="col-span-2">
                 <LinkCard
                   Icon={<RectangleGroupIcon className="text-white" />}
-                  text="Update All Tags"
+                  text="Manage Tags"
                   className="bg-green-600"
-                  link="/s/UpdateTags"
+                  link="/s/tags"
                 ></LinkCard>
               </div>
               <div className="col-span-2">

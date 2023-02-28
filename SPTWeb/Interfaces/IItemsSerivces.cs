@@ -11,6 +11,7 @@ namespace SPTWeb.Interfaces
         public Task<(Item item,List<Stream> images)> GetItem(int itemId);
         public Task<bool> UploadImage(string filename, IFormFile file);
         public Task<IActionResult> AddItem(ItemAddNewRequestDTO itemDto,int storeId);
+        public Task DeleteItem(int itemId);
 
     }
 }

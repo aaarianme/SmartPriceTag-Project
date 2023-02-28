@@ -20,7 +20,7 @@ export default function LoginPage() {
               </p>
               <div className="flex flex-row justify-end">
                 <a
-                  href="/"
+                  href="/login/master"
                   className="justify-end text-blue-600 px-2 py-1 bg-white rounded inline-block hover:underline"
                 >
                   Master Login
@@ -37,7 +37,7 @@ export default function LoginPage() {
               </p>
               <div className="flex flex-row justify-end">
                 <a
-                  href="/"
+                  href="/login/store"
                   className="justify-end text-blue-600 px-2 py-1 bg-white rounded inline-block hover:underline"
                 >
                   Store Login
@@ -53,7 +53,7 @@ export default function LoginPage() {
               </p>
               <div className="flex flex-row justify-end">
                 <a
-                  href="/"
+                  href="/signup"
                   className="justify-end text-green-600 px-2 py-1 bg-white rounded inline-block hover:underline"
                 >
                   Sign Up Now!

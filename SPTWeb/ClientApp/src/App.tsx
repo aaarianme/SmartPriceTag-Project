@@ -30,6 +30,8 @@ import GetItemsFromApiPage from "./Pages/GetItemsFromApiPage";
 import NewItemPage from "./Pages/NewItemPage";
 import SampleP from "./Pages/SampleP";
 import ItemViewPage from "./Pages/ItemViewPage";
+import SignUpPage from "./Pages/SignUpPage";
+import TagManagerPage from "./Pages/TagManagerPage";
 //-------------------
 
 export default function App() {
@@ -43,6 +45,8 @@ export default function App() {
           <Route path="master" element={<ClientLoginPage />} />
           <Route path="store" element={<StoreLoginPage />} />
         </Route>
+        <Route path="/signup" element={<SignUpPage />} />
+
         <Route
           path="u"
           element={
@@ -69,6 +73,7 @@ export default function App() {
           <Route path="items/:itemId" element={<ItemViewPage />} />
           <Route path="items/new" element={<NewItemPage />} />
           <Route path="items/new/fromapi" element={<GetItemsFromApiPage />} />
+          <Route path="tags" element={<TagManagerPage />} />
         </Route>
 
         <Route path="signout" element={<SignOutPage />} />

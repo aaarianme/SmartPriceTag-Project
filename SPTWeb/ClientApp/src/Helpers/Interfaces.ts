@@ -22,7 +22,21 @@ export interface IItem {
   internalID: string;
   storeId: number;
 }
+export interface ICampaign {
+  campaignId: number;
+  itemId: number;
+  startDate: Date;
+  endDate: Date;
+  wasPrice: number;
+  isPrice: number;
+  displayText: string;
+  group: string;
+  isActive: boolean;
+}
 export interface IFullItemDetails {
   item: IItem;
+  images: Array<string>;
+  campaigns: Array<ICampaign>;
+  tag: string;
 }
 //#endregion

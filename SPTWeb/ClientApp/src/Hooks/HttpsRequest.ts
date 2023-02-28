@@ -62,4 +62,19 @@ export function usePostRequest() {
 }
 
 export function PutRequest() {}
-export function DelRequest() {}
+export function useDeleteRequest() {
+  async function makeRequest(
+    path: string,
+    payload?: any | null,
+    httpsOptions?: HttpOptions
+  ) {
+    await axios
+      .delete(path, { data: payload })
+      .then((Response: any) => {
+        httpsOptions?.onSuccess?.(Response);
+      })
+      .catch((err: any) => httpsOptions?.onFail?.(err.response))
+      .finally(() => httpsOptions?.finally?.());
+  }
+  return makeRequest;
+}

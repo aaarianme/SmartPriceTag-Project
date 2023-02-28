@@ -1,28 +1,69 @@
 import React, { useEffect, useState } from "react";
 import StoreNav from "../Components/StoreNav";
 import { usePostRequest } from "../Hooks/HttpsRequest";
+import {
+  ErrorPopUp,
+  MessagePopUp,
+  PopUpTrigger,
+  usePopUpManager,
+} from "../Hooks/usePopUpManager";
 
 export default function NewItemPage() {
-  const [files, setFiles] = useState<{ name: string; file: File }>();
+  const [files, setFiles] = useState<{ file: FileList }>();
   const [state, setState] = useState<{
     productDesc: string;
     name: string;
     internalId: string;
     weight: string;
     netWeight: string;
-  }>();
+  }>({ productDesc: "", internalId: "", name: "", weight: "", netWeight: "" });
 
   const post = usePostRequest();
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
+  const [setPopup, removePopup, popUp] = usePopUpManager();
   async function PostItem() {
     const formData = new FormData();
-    formData.append("formFile", files.file);
-    formData.append("fileName", files.name);
+    if (files != undefined) {
+      let keys = Object.keys(files.file);
+      let arr = [];
+      keys.forEach((x) => {
+        arr.push(files.file[x]);
+      });
+      arr.forEach((x) => {
+        formData.append("formFile", x);
+      });
+    }
+
     formData.append("jsondata", JSON.stringify(state));
 
-    let res = await post("/api/items", formData);
+    let res = await post("/api/items", formData, {
+      onSuccess: (res) => {
+        setPopup(
+          <MessagePopUp
+            message="Item was added"
+            onButtonClick={() => {
+              setState({
+                productDesc: "",
+                internalId: "",
+                name: "",
+                weight: "",
+                netWeight: "",
+              });
+              removePopup();
+            }}
+            header="Success!"
+          />
+        );
+      },
+      onFail: (res) => {
+        setPopup(
+          <ErrorPopUp
+            message={res.data.message}
+            onButtonClick={removePopup}
+            header="Item not added"
+          ></ErrorPopUp>
+        );
+      },
+    });
     console.log(res);
   }
   return (
@@ -54,6 +95,7 @@ export default function NewItemPage() {
                     onChange={(e) => {
                       setState({ ...state, name: e.target.value });
                     }}
+                    value={state.name}
                     name="first-name"
                     className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -70,6 +112,7 @@ export default function NewItemPage() {
                     onChange={(e) => {
                       setState({ ...state, internalId: e.target.value });
                     }}
+                    value={state.internalId}
                     name="first-name"
                     className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -85,6 +128,7 @@ export default function NewItemPage() {
                     onChange={(e) => {
                       setState({ ...state, weight: e.target.value });
                     }}
+                    value={state.weight}
                     name="first-name"
                     className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -102,8 +146,7 @@ export default function NewItemPage() {
                     type="file"
                     onChange={(e) => {
                       setFiles({
-                        file: e.target.files[0],
-                        name: e.target.files[0].name,
+                        file: e.target.files,
                       });
                     }}
                     multiple
@@ -122,6 +165,7 @@ export default function NewItemPage() {
                     onChange={(e) => {
                       setState({ ...state, netWeight: e.target.value });
                     }}
+                    value={state.netWeight}
                     name="first-name"
                     className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -137,6 +181,7 @@ export default function NewItemPage() {
                     onChange={(e) => {
                       setState({ ...state, productDesc: e.target.value });
                     }}
+                    value={state.productDesc}
                     name="first-name"
                     className="mt-1 block w-full py-3 px-2 border-gray-100 rounded-md border-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   />
@@ -154,6 +199,7 @@ export default function NewItemPage() {
           </div>
         </div>
       </div>
+      <PopUpTrigger popUp={popUp}></PopUpTrigger>
     </div>
   );
 }
